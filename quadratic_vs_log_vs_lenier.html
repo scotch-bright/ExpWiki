@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Quadratic vs Lenier vs Logarthimic</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+		<style type="text/css">
+			.sphere {
+				border-radius: 50%;
+				background-color: lightgrey;
+				width: 150px;
+				height: 150px;
+				font-size: 12px;
+				display: inline-block;
+				transition: width 1s, height 1s;
+				box-shadow: 0 2px 2px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.1);
+			}
+
+			.sphere:hover {
+			  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+			}
+
+
+			.spheres_holder {
+				display: flex;
+				width: 100%;
+				font-weight: bold;
+			}
+
+			.spheres_holder > div {
+				flex: 1;
+				margin-bottom: 20px;
+				text-align: center;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<form class="mb-5 mt-2" id="input_form">
+						<div class="form-group">
+							<label for="the_n">Input Size 'n'</label>
+							<input type="number" class="form-control" id="the_n" aria-describedby="n_help">
+							<small id="n_help" class="form-text text-muted">Enter in a value of 'n', which is the input size. We will assume that the output, which you can see in the table below, is a unit of time (lets say seconds, nanoseconds, whatever you would like)</small>
+						</div>
+						<button type="submit" class="btn btn-primary" id="calculate_button">Calculate</button>
+					</form>
+
+					<div class="spheres_holder">
+						<div>
+							<div>
+								<div class="sphere" id="lenier_sphere" style="background-color: #80ff00;"></div>
+								<br />
+								Lenier [ 7n ]
+							</div>
+						</div>
+						<div>
+							<div>
+								<div class="sphere" id="log_sphere" style="background-color: #fbde44;"></div>
+								<br />
+								Log [ 7n Log<sub>2</sub>(n) ]
+							</div>
+						</div>
+						<div>
+							<div>
+								<div class="sphere" id="quadratic_sphere" style="background-color: #f65058;"></div>
+								<br />
+								Quadratic [ 7n<sup>2</sup> ]
+							</div>
+						</div>
+					</div>
+
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Size Of Input (n)</th>
+								<th>Lenier [ 7n ]</th>
+								<th>Log [ 7n Log<sub>2</sub>(n) ]</th>
+								<th>Quadratic [ 7n<sup>2</sup> ]</th>
+							</tr>
+						</thead>
+						<tbody id="result_table_body">
+						</tbody>
+					</table>
+
+
+					<canvas id="myChart" width="100%" height="50"></canvas>
+
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+
+			function scaleBetween(unscaledNum, minAllowed, maxAllowed, min, max) {
+			  return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
+			}
+
+			function sformat(s) {
+
+			    // create array of day, hour, minute and second values
+			    var fm = [
+			        Math.floor(s / (3600 * 24)),
+			        Math.floor(s % (3600 * 24) / 3600),
+			        Math.floor(s % 3600 / 60),
+			        Math.floor(s % 60)
+			    ];
+
+			    // map over array
+			    return $.map(fm, function(v, i) {
+
+			        // if a truthy value
+			        if (Boolean(v)) {
+
+			            // add the relevant value suffix
+			            if (i === 0) {
+			                v = plural(v, "day");
+			            } else if (i === 1) {
+			                v = plural(v, "hour");
+			            } else if (i === 2) {
+			                v = plural(v, "minute");
+			            } else if (i === 3) {
+			                v = plural(v, "second");
+			            }
+
+			            return v;
+			        }
+
+			    }).join(', ');
+
+			}
+
+			function plural(value, unit) {
+
+			    if (value === 1) {
+			        return value + " " + unit;
+			    } else if (value > 1) {
+			        return value + " " + unit + "s";
+			    }
+
+			}
+
+
+			function lenier_output(input) {
+				return (input * 7).toFixed(1);
+			}
+
+			function log_output(input) {
+				return (7 * input * Math.log2(input)).toFixed(1);
+			}
+
+			function quadratic_output(input) {
+				return (7 * Math.pow(input, 2)).toFixed(1);
+			}
+
+			function addRowToResultTable(input) {
+				let newRow = `
+					<tr>
+						<td>${input}</td>
+						<td>
+							${lenier_output(input)}
+							<br />
+							<small>Time: ${sformat(lenier_output(input))}</small>
+						</td>
+						<td>
+							${log_output(input)}
+							<br />
+							<small>Time: ${sformat(log_output(input))}</small>
+						</td>
+						<td>
+							${quadratic_output(input)}
+							<br />
+							<small>Time: ${sformat(quadratic_output(input))}</small>
+						</td>
+					</tr>
+				`;
+				$('#result_table_body').append(newRow);
+			}
+
+			$( document ).ready(function() {
+
+				$("#input_form").submit(
+					function (event) {
+						let n = parseInt($("#the_n").val());
+						addRowToResultTable(n);
+
+						updateChart(n);
+						
+						let minCircleSize = 20;
+						let maxCircleSize = 150;
+
+						let sizeOfLogSphere = scaleBetween(
+							log_output(n), minCircleSize, maxCircleSize, lenier_output(n), quadratic_output(n)
+						);
+
+						$("#lenier_sphere").css({
+							'width': `${minCircleSize}px`,
+							'height': `${minCircleSize}px`
+						});
+						
+						$("#log_sphere").css({
+							'width': `${sizeOfLogSphere}px`,
+							'height': `${sizeOfLogSphere}px`
+						});
+
+						$("#quadratic_sphere").css({
+							'width': `${maxCircleSize}px`,
+							'height': `${maxCircleSize}px`
+						});
+
+						$("#the_n").val('');
+
+						event.preventDefault();
+					}
+				);
+
+			});
+
+
+			function updateChart(n) {
+				myChartConfig.data.labels.push(20);
+				myChartConfig.data.datasets[0].data.push(lenier_output(n));
+				myChartConfig.data.datasets[1].data.push(log_output(n));
+				myChartConfig.data.datasets[2].data.push(quadratic_output(n));
+				chart.update();
+			}
+
+			var ctx = document.getElementById('myChart').getContext('2d');
+			var myChartConfig = {
+			    type: 'line',
+			    data: {
+			        labels: [],
+			        datasets: [
+				        {
+				            label: 'Lenier',
+				            data: [],
+				            backgroundColor: 'rgba(128, 255, 0, 0.2)',
+				            borderColor: 'rgba(128, 255, 0, 1)',
+				            borderWidth: 2
+				        },
+				        {
+				            label: 'Log',
+				            data: [],
+				            backgroundColor: 'rgba(251, 222, 68, 0.2)',
+				            borderColor: 'rgba(251, 222, 68, 1)',
+				            borderWidth: 2
+				        },
+				        {
+				            label: 'Quadratic',
+				            data: [],
+				            backgroundColor: 'rgba(246, 80, 88, 0.2)',
+				            borderColor: 'rgba(246, 80, 88, 1)',
+				            borderWidth: 2
+				        },
+			        ]
+			    },
+			    options: {
+			        scales: {
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero: true
+			                }
+			            }]
+			        }
+			    }
+			};
+
+			var chart = new Chart(ctx, myChartConfig);
+
+		</script>
+	</body>
+</html>

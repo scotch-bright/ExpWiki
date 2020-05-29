@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bubble Sort Demo :: By Khoj Badami</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+		<style type="text/css">
+
+			.table {
+				background-color: white;
+			}
+
+			tr {
+				background-color: white;
+				transition: background-color 0.5s ease-out;
+			}
+
+			tr.updated {
+				background-color: #FDD437;
+			}
+
+			.bubble {
+				border-radius: 50%;
+				box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
+			    height: 70px;
+				width: 70px;
+				position: absolute;
+				color: white;
+				transition: color 0.5s ease-out;
+			}
+
+			.bubble.active {
+				box-shadow:
+				    inset 0 0 50px #fff,
+				    inset 20px 0 80px #f0f,
+				    inset -20px 0 80px #0ff,
+				    inset 20px 0 300px #f0f,
+				    inset -20px 0 300px #0ff,
+				    0 0 50px #fff,
+				    -10px 0 80px #f0f,
+				    10px 0 80px #0ff;
+			}
+
+			.bubble.sorted {
+				color: #00ff4e;
+			}
+
+			.bubble:after {
+			    background: radial-gradient(ellipse at center,  rgba(255,255,255,0.5) 0%,rgba(255,255,255,0) 70%);
+			    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#80ffffff', endColorstr='#00ffffff',GradientType=1 );
+				border-radius: 50%;
+				box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);				
+				content: "";
+			    height: 50px;
+				left: 10px;
+				width: 50px;
+			}
+
+			.number_holder {
+				display: flex;
+			    width: 100%;
+			    height: 100%;
+			    justify-content: center;
+			    align-items: center;
+			    font-weight: bold;
+			    font-size: 25px;
+			}
+
+			body {
+				background: #00b4ff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container mt-3 mb-3">
+			<div class="row">
+				<div class="col-sm-12 text-center text-white">
+					<h1>Bubble Sort Demo</h1>
+					<h5>Try to see how different inputs have different number of "comparisons" and overall time!</h5>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<form class="mt-2" id="input_form">
+						<div class="form-group">
+							<div class="input-group">
+							  <div class="input-group-prepend">
+							    <span class="input-group-text">
+							    	The Numbers To Be Sorted
+							    </span>
+							  </div>
+							  <input type="number" class="form-control" value="1" name="0" id="input_number_0">
+							  <input type="number" class="form-control" value="2" name="1" id="input_number_1">
+							  <input type="number" class="form-control" value="3" name="2" id="input_number_2">
+							  <input type="number" class="form-control" value="4" name="3" id="input_number_3">
+							  <input type="number" class="form-control" value="5" name="4" id="input_number_4">
+							  <input type="number" class="form-control" value="6" name="5" id="input_number_5">
+							</div>
+						</div>
+						<button type="submit" class="btn btn-danger" id="calculate_button">Sort!</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row" style="min-height: 600px;">
+				<div class="col-sm-4 mt-3" style="position: relative;" id="bubbles_holder">
+				</div> 
+				<div class="col-sm-8 mt-3 text-white">
+					<table class="table">
+						<thead class="thead-dark">
+							<tr>
+								<th>
+									Input
+								</th>
+								<th>
+									Number Of Comparisons
+								</th>
+							</tr>
+						</thead>
+						<tbody id="number_of_operations">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="pleaseSeeOnALargerScreen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Please see on a larger screen!</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        This demo cannot really be appreciated on a small screen.
+		        <br />
+		        Please see it on a larger screen. 😀
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+
+		var arrayOfAnimationSteps = [];
+		var resultsTable = {}
+
+		function sleep(ms) {
+		  return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		function updateResultsTable(originalArray, numberOfComparisions) {
+			resultsTable[originalArray.toString()] = numberOfComparisions;
+			let rowId = originalArray.join("-");
+			let rowSelector = "table #" + rowId;
+			if ($(rowSelector).length == 0) {
+				$("#number_of_operations").append(
+					`
+					<tr id="${rowId}">
+						<td>[${originalArray.toString()}]</td>
+						<td>${numberOfComparisions}</td>
+					</tr>
+					`
+				);
+			}
+			else {
+				$(rowSelector).html(
+					`
+					<td>[${originalArray.toString()}]</td>
+					<td>${numberOfComparisions}</td>
+					`
+				);	
+			}
+			$(rowSelector).addClass('updated');
+			setTimeout(() => { 
+				$(rowSelector).removeClass('updated');
+			}, 1000);
+		}
+
+		async function playAnimation(arrayOfAnimationSteps) {
+			await sleep(1000);
+			for (animationStep of arrayOfAnimationSteps) {
+				animationStep.play();
+				await sleep(2200);
+			}
+		}
+
+		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions) {
+			this.pointerPostion = pointerPostion;
+			this.originalArray = originalArray;
+			this.numberOfComparisions = numberOfComparisions;
+			this.play = () => {
+				// Mark then active
+				markBubbleActive(this.pointerPostion);
+				markBubbleActive(this.pointerPostion + 1);
+
+				// Get selectors & new tops
+				let firstBubbleSelector = `#number_${pointerPostion}`;
+				let secondBubbleSelector = `#number_${pointerPostion + 1}`;
+
+				new Audio('./success.mp3').play();
+
+				$(firstBubbleSelector).addClass('sorted');
+				$(secondBubbleSelector).addClass('sorted');
+
+				setTimeout(() => { 
+					$(firstBubbleSelector).removeClass('sorted');
+					$(secondBubbleSelector).removeClass('sorted');
+					markBubbleInActive(this.pointerPostion);
+					markBubbleInActive(this.pointerPostion + 1);
+					updateResultsTable(this.originalArray, this.numberOfComparisions);
+				}, 2000);
+			}
+		}
+
+		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions) {
+			this.startingArray = startingArray;
+			this.pointerPositionToSwapAt = pointerPositionToSwapAt;
+			this.originalArray = originalArray;
+			this.numberOfComparisions = numberOfComparisions;
+
+			this.play = () => {
+				setUpBallsAsPerInputArray(this.startingArray);
+				
+				// Mark then active
+				markBubbleActive(this.pointerPositionToSwapAt);
+				markBubbleActive(this.pointerPositionToSwapAt + 1);
+
+				// Get selectors & new tops
+				let firstBubbleSelector = `#number_${this.pointerPositionToSwapAt}`;
+				let secondBubbleSelector = `#number_${this.pointerPositionToSwapAt + 1}`;
+				
+				new Audio('./bubble.mp3').play()
+
+				let firstTop = $(firstBubbleSelector).css('top');
+				let secondTop = $(secondBubbleSelector).css('top');
+
+				let firstVal = this.startingArray[this.pointerPositionToSwapAt];
+				let secondVal = this.startingArray[this.pointerPositionToSwapAt + 1];
+
+				this.startingArray[this.pointerPositionToSwapAt] = secondVal;
+				this.startingArray[this.pointerPositionToSwapAt + 1] = firstVal;
+
+				// Animate
+				gsap.to(firstBubbleSelector, {
+					top: secondTop,
+					ease: "elastic.out(1, 0.3)",
+					duration: 2
+				});
+				gsap.to(secondBubbleSelector, {
+					top: firstTop,
+					ease: "elastic.out(1, 0.3)",
+					duration: 2,
+					onComplete: () => {
+						markBubbleInActive(this.pointerPositionToSwapAt);
+						markBubbleInActive(this.pointerPositionToSwapAt + 1);
+						setUpBallsAsPerInputArray(this.startingArray);
+						updateResultsTable(this.originalArray, this.numberOfComparisions);
+					}
+				});
+			}
+		}
+
+		function sortInputArrayUsingBubbleSortAndMakeAnimationSteps(inputArray) {
+			let originalArray = [...inputArray];
+			arrayOfAnimationSteps = [];
+			let numberOfComparisions = 0;
+			let lengthOfInputArray = inputArray.length;
+			let reachedEndAndThereWereNoSwaps = false;
+			while (reachedEndAndThereWereNoSwaps != true) {
+				let wasThereASwap = false;
+				for (pointerPostion = 0; pointerPostion < lengthOfInputArray - 1; pointerPostion++) {
+					let elementAtPointer = inputArray[pointerPostion];
+					let nextElement = inputArray[pointerPostion + 1];
+					numberOfComparisions += 1;
+					if (elementAtPointer > nextElement) {
+						wasThereASwap = true;
+						arrayOfAnimationSteps.push(
+							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions)
+						);
+						inputArray[pointerPostion] = nextElement;
+						inputArray[pointerPostion + 1] = elementAtPointer;
+					}
+					else {
+						arrayOfAnimationSteps.push(
+							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions)
+						);
+					}
+				}
+				if (wasThereASwap == false) {
+					reachedEndAndThereWereNoSwaps = true;
+				}
+			}
+			playAnimation(arrayOfAnimationSteps);
+		}
+
+		$( document ).ready(function() {
+
+			if (screen.width < 768) {
+				$("#pleaseSeeOnALargerScreen").modal();
+			}
+
+			$("#input_form").submit(
+				function(event) {
+					event.preventDefault();
+					inputArray = $(this).serializeArray().map(
+						(input) => parseInt(input.value)
+					);
+					setUpBallsAsPerInputArray(inputArray);
+					sortInputArrayUsingBubbleSortAndMakeAnimationSteps(inputArray);
+				}
+			);
+
+		});
+
+		function setUpBallsAsPerInputArray(inputArray) {
+			let htmlOfBubbles = inputArray.map(
+				(input, idx) => {
+					return `<div class="bubble" style="top: calc(${idx} * 90px);" id="number_${idx}">
+						<div class="number_holder">
+							${input}
+						</div>
+					</div>`
+				}
+			).join("");
+			$("#bubbles_holder").html(htmlOfBubbles);
+		}
+
+		function markBubbleActive(index) {
+			$(`#number_${index}`).addClass('active');
+		}
+
+		function markBubbleInActive(index) {
+			$(`#number_${index}`).removeClass('active');
+		}
+
+	</script>
+	</body>
+</html>
