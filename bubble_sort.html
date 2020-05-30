@@ -3,6 +3,7 @@
 	<head>
 		<title>Bubble Sort Demo :: By Khoj Badami</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<style type="text/css">
 
 			.table {
@@ -74,8 +75,7 @@
 		<div class="container mt-3 mb-3">
 			<div class="row">
 				<div class="col-sm-12 text-center text-white">
-					<h1>Bubble Sort Demo</h1>
-					<h5>Try to see how different inputs have different number of "comparisons" and overall time!</h5>
+					<h1>Bubble Sort</h1>
 				</div>
 			</div>
 		</div>
@@ -115,6 +115,10 @@
 				<div class="col-sm-4 mt-3" style="position: relative;" id="bubbles_holder">
 				</div> 
 				<div class="col-sm-8 mt-3 text-white">
+					<div class="text-center mb-3">
+						<button class="btn btn-warning btn-lg" type="button" id="pause_button">Pause <i class="fa fa-pause"></i></button>
+						<button class="btn btn-warning btn-lg" type="button" id="play_button">Play <i class="fa fa-play-circle"></i></button>
+					</div>
 					<table class="table">
 						<thead class="thead-dark">
 							<tr>
@@ -161,7 +165,22 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 	<script type="text/javascript">
 
+		var currentAnimationStep = 0;
+		var animationRunning = false;
 		var arrayOfAnimationSteps = [];
+
+		function playAnimation() {
+			$("#play_button").attr('disabled', true);
+			$("#pause_button").attr('disabled', false);
+			animationRunning = true;
+			runAnimation();
+		}
+
+		function pauseAnimation() {
+			animationRunning = false;
+			$("#play_button").attr('disabled', false);
+			$("#pause_button").attr('disabled', true);
+		}
 
 		function sleep(ms) {
 		  return new Promise(resolve => setTimeout(resolve, ms));
@@ -196,10 +215,14 @@
 			}, 1000);
 		}
 
-		async function playAnimation(arrayOfAnimationSteps) {
+		async function runAnimation() {
 			await sleep(1000);
-			for (animationStep of arrayOfAnimationSteps) {
+
+			for (i = currentAnimationStep; i < arrayOfAnimationSteps.length; i++) {
+				if (animationRunning == false) { break; }
+				let animationStep = arrayOfAnimationSteps[i];
 				animationStep.play();
+				currentAnimationStep = i;
 				await sleep(2200);
 			}
 		}
@@ -318,7 +341,8 @@
 					reachedEndAndThereWereNoSwaps = true;
 				}
 			}
-			playAnimation(arrayOfAnimationSteps);
+			currentAnimationStep = 0;
+			playAnimation();
 		}
 
 		$( document ).ready(function() {
@@ -326,6 +350,18 @@
 			if (screen.width < 768) {
 				$("#pleaseSeeOnALargerScreen").modal();
 			}
+
+			$("#pause_button").click(
+				function () {
+					pauseAnimation();
+				}
+			);
+
+			$("#play_button").click(
+				function () {
+					playAnimation();
+				}
+			);
 
 			$("#input_form").submit(
 				function(event) {
