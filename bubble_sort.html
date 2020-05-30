@@ -98,6 +98,12 @@
 							  <input type="number" class="form-control" value="0" name="5" id="input_number_5">
 							</div>
 						</div>
+						<div class="form-group form-check">
+						    <input type="checkbox" class="form-check-input" id="optimize">
+						    <label class="form-check-label text-white font-weight-bold" for="optimize">
+						    	Optimize bubble sort!
+						    </label>
+						</div>
 						<button type="submit" class="btn btn-danger" id="calculate_button">Sort!</button>
 					</form>
 				</div>
@@ -117,6 +123,9 @@
 								</th>
 								<th>
 									Number Of Comparisons
+								</th>
+								<th>
+									Mode (Optimized / Normal)
 								</th>
 							</tr>
 						</thead>
@@ -153,15 +162,13 @@
 	<script type="text/javascript">
 
 		var arrayOfAnimationSteps = [];
-		var resultsTable = {}
 
 		function sleep(ms) {
 		  return new Promise(resolve => setTimeout(resolve, ms));
 		}
 
-		function updateResultsTable(originalArray, numberOfComparisions) {
-			resultsTable[originalArray.toString()] = numberOfComparisions;
-			let rowId = originalArray.join("-");
+		function updateResultsTable(originalArray, numberOfComparisions, optimized) {
+			let rowId = originalArray.join("-") + `${optimized ? 'Optimized' : 'Normal'}`;
 			let rowSelector = "table #" + rowId;
 			if ($(rowSelector).length == 0) {
 				$("#number_of_operations").append(
@@ -169,6 +176,7 @@
 					<tr id="${rowId}">
 						<td>[${originalArray.toString()}]</td>
 						<td>${numberOfComparisions}</td>
+						<td>${optimized ? 'Optimized' : 'Normal'}</td>
 					</tr>
 					`
 				);
@@ -178,6 +186,7 @@
 					`
 					<td>[${originalArray.toString()}]</td>
 					<td>${numberOfComparisions}</td>
+					<td>${optimized ? 'Optimized' : 'Normal'}</td>
 					`
 				);	
 			}
@@ -195,7 +204,7 @@
 			}
 		}
 
-		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions) {
+		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized) {
 			this.pointerPostion = pointerPostion;
 			this.originalArray = originalArray;
 			this.numberOfComparisions = numberOfComparisions;
@@ -218,12 +227,12 @@
 					$(secondBubbleSelector).removeClass('sorted');
 					markBubbleInActive(this.pointerPostion);
 					markBubbleInActive(this.pointerPostion + 1);
-					updateResultsTable(this.originalArray, this.numberOfComparisions);
+					updateResultsTable(this.originalArray, this.numberOfComparisions, optimized);
 				}, 2000);
 			}
 		}
 
-		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions) {
+		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions, optimized) {
 			this.startingArray = startingArray;
 			this.pointerPositionToSwapAt = pointerPositionToSwapAt;
 			this.originalArray = originalArray;
@@ -265,38 +274,46 @@
 						markBubbleInActive(this.pointerPositionToSwapAt);
 						markBubbleInActive(this.pointerPositionToSwapAt + 1);
 						setUpBallsAsPerInputArray(this.startingArray);
-						updateResultsTable(this.originalArray, this.numberOfComparisions);
+						updateResultsTable(this.originalArray, this.numberOfComparisions, optimized);
 					}
 				});
 			}
 		}
 
-		function sortInputArrayUsingBubbleSortAndMakeAnimationSteps(inputArray) {
+		function sortInputArrayUsingBubbleSortAndMakeAnimationSteps(inputArray, optimized) {
 			let originalArray = [...inputArray];
 			arrayOfAnimationSteps = [];
 			let numberOfComparisions = 0;
 			let lengthOfInputArray = inputArray.length;
 			let reachedEndAndThereWereNoSwaps = false;
+
+			let last_index = lengthOfInputArray - 1;
+
 			while (reachedEndAndThereWereNoSwaps != true) {
 				let wasThereASwap = false;
-				for (pointerPostion = 0; pointerPostion < lengthOfInputArray - 1; pointerPostion++) {
+				for (pointerPostion = 0; pointerPostion < last_index; pointerPostion++) {
 					let elementAtPointer = inputArray[pointerPostion];
 					let nextElement = inputArray[pointerPostion + 1];
 					numberOfComparisions += 1;
 					if (elementAtPointer > nextElement) {
 						wasThereASwap = true;
 						arrayOfAnimationSteps.push(
-							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions)
+							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions, optimized)
 						);
 						inputArray[pointerPostion] = nextElement;
 						inputArray[pointerPostion + 1] = elementAtPointer;
 					}
 					else {
 						arrayOfAnimationSteps.push(
-							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions)
+							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized)
 						);
 					}
 				}
+
+				if (optimized) {
+					last_index -= 1;
+				}
+
 				if (wasThereASwap == false) {
 					reachedEndAndThereWereNoSwaps = true;
 				}
@@ -317,7 +334,7 @@
 						(input) => parseInt(input.value)
 					);
 					setUpBallsAsPerInputArray(inputArray);
-					sortInputArrayUsingBubbleSortAndMakeAnimationSteps(inputArray);
+					sortInputArrayUsingBubbleSortAndMakeAnimationSteps(inputArray, $('#optimize').is(":checked"));
 				}
 			);
 
