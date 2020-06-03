@@ -121,6 +121,22 @@
 				height: 39.686,
 				x: 380.006,
 				y: 324.920 + 10
+			},
+			{
+				name: 'level3Platform3',
+				points: "620.278,356.945 704.988,356.945 704.988,364.606 620.278,364.606 620.278,356.945",
+				width: 84.710,
+				height: 7.661,
+				x: 620.278,
+				y: 356.945 + 10
+			},
+			{
+				name: 'level3Stopper3',
+				points: "580.592,324.920 620.278,324.920 620.278,364.606 580.592,364.606 580.592,324.920",
+				width: 39.686,
+				height: 39.686,
+				x: 580.592,
+				y: 324.920 + 10
 			}
 		];
 
@@ -128,6 +144,8 @@
 			() => {
 				World.remove(world, allBodies.level2Platform1);
 				World.remove(world, allBodies.level2Platform2);
+				World.remove(world, allBodies.level2Stopper1);
+				World.remove(world, allBodies.level2Stopper2);
 			}
 		]
 
