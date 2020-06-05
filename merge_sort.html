@@ -16,6 +16,7 @@
 	<script type="text/javascript">
 
 		let allBodies = {};
+		let currentIndexOfActionWhenBodiesStopMoving = 0;
 		const mmToPxMupliplicationFactor = 3.78;
 
 		function getColorFromSVGNode(svgNode) {
@@ -125,6 +126,8 @@
             }
         });
 
+        let world = engine.world;
+
 		$.get( "./merge-sort-resources/static.svg", function( data ) {
 
 			// Draw All Paths
@@ -139,7 +142,7 @@
 					parseFloat(objectY),
 					objectName
 				);
-				World.add(engine.world, bodyMaker.makeBody());
+				World.add(world, bodyMaker.makeBody());
 			});
 
 			// Draw All Rectangles
@@ -149,13 +152,66 @@
 					svgRect,
 					objectName
 				);
-				World.add(engine.world, bodyMaker.makeBody());
+				World.add(world, bodyMaker.makeBody());
 			});
 
 		});
 
+		let circlePostions = [
+			[378.245 + 10, 19.745],
+			[419.445 + 10, 19.745],
+			[460.645 + 10, 19.745],
+			[501.845 + 10, 19.745],
+			[543.045 + 10, 19.745],
+			[584.245 + 10, 19.745]
+		]
+
+		let allCirclesWidthHeight = 37.510;
+
+		let arrayOfCircles = circlePostions.map((item) => {
+			let newX = allCirclesWidthHeight / 2 + item[0];
+			let newY = allCirclesWidthHeight / 2 + item[1];
+			let circle = Bodies.circle(newX, newY, allCirclesWidthHeight / 2);
+			World.add(world, circle);
+			return circle;
+		});
+
         Engine.run(engine);
 		Render.run(render);
+
+		let actionsWhenObjectsStopMoving = [
+			() => {
+				World.remove(world, allBodies.l0Platform1);
+				World.remove(world, allBodies.l0Platform2);
+				World.remove(world, allBodies.l0Stopper1);
+				World.remove(world, allBodies.l0Stopper2);
+			},
+			() => {
+				World.remove(world, allBodies.level2_p2);
+				World.remove(world, allBodies.level2_p3);
+				World.remove(world, allBodies.level2_s2);
+				World.remove(world, allBodies.level2_s3);
+				World.remove(world, allBodies.level2_p4);
+				World.remove(world, allBodies.level2_s4);
+				World.remove(world, allBodies.level2_p1);
+				World.remove(world, allBodies.level2_s1);
+			}
+		]
+
+		setInterval(function(){ 
+			let allStationary = true;
+			arrayOfCircles.forEach(
+				(item, idx) => {
+					if (item.speed > 0.3) {
+						allStationary = false;
+					}
+				}
+			);
+			if (allStationary && actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving] != undefined) {
+				actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving]();
+				currentIndexOfActionWhenBodiesStopMoving += 1;
+			}
+		}, 1000);
 
 	</script>
 </body>
