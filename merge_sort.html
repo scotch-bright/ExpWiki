@@ -133,6 +133,7 @@
 			// Draw All Paths
 			$(data).find('path').each(function(i, path) {
 				let fullID = $(path).attr("id");
+				console.log('working on path ' + fullID);
 				let objectName = fullID.split("_")[0];
 				let objectX = fullID.split("_")[1];
 				let objectY = fullID.split("_")[2];
