@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1028"
+   height="1859"
+   viewBox="0 0 271.99166 491.86043"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="static.svg"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)">
+  <sodipodi:namedview
+     inkscape:document-rotation="0"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1299"
+     inkscape:window-height="705"
+     id="namedview6"
+     showgrid="false"
+     inkscape:zoom="0.27380312"
+     inkscape:cx="514"
+     inkscape:cy="929.5"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8" />
+  <defs
+     id="defs2" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     d="m 272.2989,73.615959 c -28.3348,0 -56.6696,0 -85.00439,0 C 201.4619,49.077309 215.6293,24.53865 229.7967,0 c 14.1674,24.538649 28.3348,49.077309 42.5022,73.615959 z"
+     inkscape:transform-center-y="-12.269329"
+     style="fill:#0000ff;stroke-width:0.264583"
+     id="test_707.885_0" />
+  <path
+     d="M 61.65771,175.95266 50.692966,135.03168 39.728224,94.110709 80.6492,105.07545 l 40.92097,10.96474 -29.956229,29.95624 z"
+     inkscape:transform-center-y="6.3304954"
+     inkscape:transform-center-x="-6.3304962"
+     style="fill:#ff0000;fill-opacity:1;stroke-width:0.264583"
+     id="test2_150.154_355.694" />
+</svg>
