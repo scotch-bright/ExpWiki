@@ -26,51 +26,108 @@
 	<script src="./merge-sort-resources/utilityFunctions.js"></script>
 	<script type="text/javascript">
 
-		function removeArrayOfBodies(arrayOfBodies) {
-			arrayOfBodies.forEach((body) => {
-				World.remove(world, body);
-			});
+		function removeBodyFromWorldAndBodiesArray(bodyName) {
+			if (allBodies[bodyName] == undefined) return;
+			World.remove(world, allBodies[bodyName]);
+			delete allBodies[bodyName];
 		}
 
-		function removeTwoBodiesOneAfterTheOther(body1, body2) {
-			World.remove(world, body1);
-			setTimeout(function(){
-				World.remove(world, body2);
-			}, 1000);
+		function removeArrayOfBodies(arrayOfBodies) {
+			arrayOfBodies.forEach((bodyName) => removeBodyFromWorldAndBodiesArray(bodyName));
+		}
+
+		function removeTwoBodiesOneAfterTheOther(body1Name, body2Name) {
+			removeBodyFromWorldAndBodiesArray(body1Name);
+			setTimeout(() => removeBodyFromWorldAndBodiesArray(body2Name), 1000);
+		}
+
+		function compareTwoPlatformsAndBreak(platform1Name, platform2Name) {
+			let v1 = findClosestCircleValueToPlank(allBodies[platform1Name]);
+			let v2 = findClosestCircleValueToPlank(allBodies[platform2Name]);
+			if (v1 < v2) {
+				removeArrayOfBodies([platform1Name]);
+			}
+			else {
+				removeArrayOfBodies([platform2Name]);
+			}
 		}
 
 		let actionsWhenObjectsStopMoving = [
 			() => {
 				removeArrayOfBodies(
 					[
-						allBodies.l0Platform1,
-						allBodies.l0Platform2,
-						allBodies.l0Stopper1,
-						allBodies.l0Stopper2
+						"l0Platform1",
+						"l0Platform2",
+						"l0Stopper1",
+						"l0Stopper2"
 					]
 				);
 			},
 			() => {
 				removeArrayOfBodies([
-					allBodies.level2_p2,
-					allBodies.level2_p3,
-					allBodies.level2_s2,
-					allBodies.level2_s3,
-					allBodies.level2_p4,
-					allBodies.level2_s4,
-					allBodies.level2_p1,
-					allBodies.level2_s1
+					"level2_p2",
+					"level2_p3",
+					"level2_s2",
+					"level2_s3",
+					"level2_p4",
+					"level2_s4",
+					"level2_p1",
+					"level2_s1"
 				]);
 			},
 			() => {
 				let v1 = findClosestCircleValueToPlank(allBodies.l2p2);
 				let v2 = findClosestCircleValueToPlank(allBodies.l2p3);
 				if (v1 < v2) {
-					removeTwoBodiesOneAfterTheOther(allBodies.l2p2, allBodies.l2p3);
+					removeTwoBodiesOneAfterTheOther("l2p2", "l2p3");
 				}
 				else {
-					removeTwoBodiesOneAfterTheOther(allBodies.l2p3, allBodies.l2p2);
+					removeTwoBodiesOneAfterTheOther("l2p3", "l2p2");
 				}
+			},
+			() => {
+				removeArrayOfBodies(["rect1027"]);
+			},
+			() => {
+				compareTwoPlatformsAndBreak("rect57", "rect70");
+			},
+			() => {
+				if (allBodies["rect57"] == undefined) {
+					compareTwoPlatformsAndBreak("rect55", "rect70");
+				}
+				else {
+					compareTwoPlatformsAndBreak("rect57", "rect55");
+				}
+			},
+			() => {
+				removeArrayOfBodies(["rect55", "rect70", "rect57"]);
+			},
+			() => {
+				let v1 = findClosestCircleValueToPlank(allBodies.l2p4);
+				let v2 = findClosestCircleValueToPlank(allBodies.l2p5);
+				if (v1 < v2) {
+					removeTwoBodiesOneAfterTheOther("l2p4", "l2p5");
+				}
+				else {
+					removeTwoBodiesOneAfterTheOther("l2p5", "l2p4");
+				}
+			},
+			() => {
+				removeArrayOfBodies(["rect1033"]);
+			},
+			() => {
+				compareTwoPlatformsAndBreak("rect110", "rect108");
+			},
+			() => {
+				if (allBodies["rect108"] == undefined) {
+					compareTwoPlatformsAndBreak("rect110", "rect112");
+				}
+				else {
+					compareTwoPlatformsAndBreak("rect112", "rect108");
+				}
+			},
+			() => {
+				removeArrayOfBodies(["rect108", "rect110", "rect112"]);
 			}
 		]
 
