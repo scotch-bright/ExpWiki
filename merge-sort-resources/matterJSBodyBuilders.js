@@ -19,6 +19,7 @@ function circleMaker(number, x, y) {
 		let finalX = allCirclesWidthHeight / 2 + x;
 		let finalY = allCirclesWidthHeight / 2 + y;
 		return Bodies.circle(finalX, finalY, allCirclesWidthHeight / 2, {
+			label: `v:${this.number}`,
 			render: {
                 sprite: {
                     texture: `./merge-sort-resources/${this.number}.png`

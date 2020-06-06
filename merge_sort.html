@@ -23,95 +23,56 @@
 	</script>
 
 	<script src="./merge-sort-resources/matterJSWorldSetup.js"></script>
+	<script src="./merge-sort-resources/utilityFunctions.js"></script>
 	<script type="text/javascript">
+
+		function removeArrayOfBodies(arrayOfBodies) {
+			arrayOfBodies.forEach((body) => {
+				World.remove(world, body);
+			});
+		}
+
+		function removeTwoBodiesOneAfterTheOther(body1, body2) {
+			World.remove(world, body1);
+			setTimeout(function(){
+				World.remove(world, body2);
+			}, 1000);
+		}
 
 		let actionsWhenObjectsStopMoving = [
 			() => {
-				World.remove(world, allBodies.l0Platform1);
-				World.remove(world, allBodies.l0Platform2);
-				World.remove(world, allBodies.l0Stopper1);
-				World.remove(world, allBodies.l0Stopper2);
+				removeArrayOfBodies(
+					[
+						allBodies.l0Platform1,
+						allBodies.l0Platform2,
+						allBodies.l0Stopper1,
+						allBodies.l0Stopper2
+					]
+				);
 			},
 			() => {
-				World.remove(world, allBodies.level2_p2);
-				World.remove(world, allBodies.level2_p3);
-				World.remove(world, allBodies.level2_s2);
-				World.remove(world, allBodies.level2_s3);
-				World.remove(world, allBodies.level2_p4);
-				World.remove(world, allBodies.level2_s4);
-				World.remove(world, allBodies.level2_p1);
-				World.remove(world, allBodies.level2_s1);
-			}
-		]
-
-		function mergeSort(input) {
-			if (input.length == 1) {
-				return input;
-			}
-			else {
-				let arrayParts = mergeSortInputSplitter(input);
-				let firstPartSorted = mergeSort(arrayParts.firstHalf);
-				let secondPartSorted = mergeSort(arrayParts.secondHalf);
-				return mergeSortedArrays(firstPartSorted, secondPartSorted);
-			}
-		}
-
-		function mergeSortedArrays(sortedArray1, sortedArray2) {
-			let output = [];
-			let sortedArray1Idx = 0;
-			let sortedArray2Idx = 0;
-			while (sortedArray1[sortedArray1Idx] != undefined || sortedArray2[sortedArray2Idx] != undefined) {
-				
-				if (sortedArray1[sortedArray1Idx] == undefined) {
-					output.push(
-						sortedArray2[sortedArray2Idx]
-					);
-					sortedArray2Idx += 1;
-					continue;
-				}
-			
-				if (sortedArray2[sortedArray2Idx] == undefined) {
-					output.push(
-						sortedArray1[sortedArray1Idx]
-					);
-					sortedArray1Idx += 1;
-					continue;
-				}
-
-				if (sortedArray2[sortedArray2Idx] > sortedArray1[sortedArray1Idx]) {
-					output.push(
-						sortedArray1[sortedArray1Idx]
-					);
-					sortedArray1Idx += 1;
-					continue;
+				removeArrayOfBodies([
+					allBodies.level2_p2,
+					allBodies.level2_p3,
+					allBodies.level2_s2,
+					allBodies.level2_s3,
+					allBodies.level2_p4,
+					allBodies.level2_s4,
+					allBodies.level2_p1,
+					allBodies.level2_s1
+				]);
+			},
+			() => {
+				let v1 = findClosestCircleValueToPlank(allBodies.l2p2);
+				let v2 = findClosestCircleValueToPlank(allBodies.l2p3);
+				if (v1 < v2) {
+					removeTwoBodiesOneAfterTheOther(allBodies.l2p2, allBodies.l2p3);
 				}
 				else {
-					output.push(
-						sortedArray2[sortedArray2Idx]
-					);
-					sortedArray2Idx += 1;
-					continue;
+					removeTwoBodiesOneAfterTheOther(allBodies.l2p3, allBodies.l2p2);
 				}
-
 			}
-			return output;
- 		}
-
-		function mergeSortInputSplitter(input) {
-			numberOfSplits += 1;
-			let duplicatedArray = [...input];
-			let halfTheInputLength = undefined;
-			if (input.length % 2 == 0 || numberOfSplits % 2 == 0) {
-				halfTheInputLength = duplicatedArray.length / 2;
-			}
-			else {
-				halfTheInputLength = duplicatedArray.length / 2 + 1;
-			}
-			return {
-				firstHalf: duplicatedArray.splice(0, halfTheInputLength),
-				secondHalf: duplicatedArray
-			}
-		}
+		]
 
 	</script>
 </body>
