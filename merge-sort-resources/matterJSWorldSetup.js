@@ -14,9 +14,9 @@ let render = Render.create({
     engine: engine,
     options: {
         width: 1028,
-        height: 1859,
+        height: 1500,
         wireframes: false,
-        background: '#ffffff'
+        background: '#06AED5'
     }
 });
 
