@@ -7,44 +7,50 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="numbers.svg"
-   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
-   inkscape:export-ydpi="25.73"
-   inkscape:export-xdpi="25.73"
-   inkscape:export-filename="/home/khoj/Desktop/Algo Demos/demos/merge-sort-resources/0.png"
-   id="svg8"
-   version="1.1"
-   viewBox="0 0 37.509998 37.509998"
+   width="37.509998mm"
    height="37.509998mm"
-   width="37.509998mm">
+   viewBox="0 0 37.509998 37.509998"
+   version="1.1"
+   id="svg8"
+   inkscape:export-filename="/home/khoj/Desktop/Algo Demos/demos/merge-sort-resources/9.png"
+   inkscape:export-xdpi="25.73"
+   inkscape:export-ydpi="25.73"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
+   sodipodi:docname="numbers.svg">
   <defs
      id="defs2">
     <rect
-       id="rect837"
+       x="6.4532299"
+       y="12.33777"
+       width="43.291939"
+       height="39.042284"
+       id="rect837" />
+    <rect
+       id="rect843"
        height="39.042284"
        width="43.291939"
        y="12.33777"
        x="6.4532299" />
   </defs>
   <sodipodi:namedview
-     inkscape:window-maximized="1"
-     inkscape:window-y="27"
-     inkscape:window-x="67"
-     inkscape:window-height="705"
-     inkscape:window-width="1299"
-     showgrid="false"
-     inkscape:document-rotation="0"
-     inkscape:current-layer="layer1"
-     inkscape:document-units="mm"
-     inkscape:cy="88.321715"
-     inkscape:cx="118.15888"
-     inkscape:zoom="1.8537461"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
+     id="base"
      pagecolor="#ffffff"
-     id="base" />
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.7356313"
+     inkscape:cx="-14.933903"
+     inkscape:cy="88.321715"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1299"
+     inkscape:window-height="705"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -53,28 +59,36 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     id="layer1"
+     inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     inkscape:label="Layer 1">
+     id="layer1">
     <ellipse
-       ry="18.481728"
-       rx="18.328608"
-       cy="18.754999"
-       cx="18.754999"
+       style="fill:#d31c1a;fill-opacity:1;stroke-width:0.263724"
        id="path10"
-       style="fill:#8d1c1a;fill-opacity:1;stroke-width:0.263724" />
+       cx="18.754999"
+       cy="18.754999"
+       rx="18.328608"
+       ry="18.481728" />
     <text
-       transform="matrix(3.3326491,0,0,3.3326491,-13.834733,-42.502273)"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Lato;-inkscape-font-specification:Lato;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect837);fill:#ececec;"
+       xml:space="preserve"
        id="text835"
-       xml:space="preserve"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Lato;-inkscape-font-specification:Lato;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect837);fill:#ececec;"
+       transform="matrix(3.3326491,0,0,3.3326491,-72.858762,-52.176714)"><tspan
          x="6.453125"
          y="22.180359"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Lato;-inkscape-font-specification:Lato;fill:#f0c808;fill-opacity:1">1</tspan></tspan></text>
+    <text
+       transform="matrix(3.3326491,0,0,3.3326491,-13.561387,-42.387644)"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Lato;-inkscape-font-specification:Lato;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect843);fill:#f0c808;fill-opacity:1;"
+       id="text841"
+       xml:space="preserve"><tspan
+         x="6.453125"
+         y="22.180359"><tspan
+           style="fill:#f0c808;fill-opacity:1">9</tspan></tspan></text>
   </g>
 </svg>

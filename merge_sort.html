@@ -52,6 +52,52 @@
 			}
 		}
 
+		function mergeOperationBasedOnPlatformsArrays(platformArray1, platformArray2) {
+			let pi = 0;
+			let pj = 0;
+			while (platformArray1[pi] != undefined || platformArray2[pj] != undefined) {
+
+				if (platformArray1[pi] == undefined) {
+					let idx = pj;
+					actionsWhenObjectsStopMoving.push(() => {
+						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+					});
+					pj += 1;
+					continue;
+				}
+
+				if (platformArray2[pj] == undefined) {
+					let idx = pi;
+					actionsWhenObjectsStopMoving.push(() => {
+						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+					});
+					pi += 1;
+					continue;
+				}
+
+				let p1Val = findClosestCircleValueToPlank(allBodies[platformArray1[pi]]);
+				let p2Val = findClosestCircleValueToPlank(allBodies[platformArray2[pj]]);
+
+				if (p1Val < p2Val) {
+					let idx = pi;
+					actionsWhenObjectsStopMoving.push(() => {
+						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+					});
+					pi += 1;
+					continue;
+				}
+				else {
+					let idx = pj;
+					actionsWhenObjectsStopMoving.push(() => {
+						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+					});
+					pj += 1;
+					continue;
+				}
+
+			}
+		}
+
 		let actionsWhenObjectsStopMoving = [
 			() => {
 				removeArrayOfBodies(
@@ -128,6 +174,12 @@
 			},
 			() => {
 				removeArrayOfBodies(["rect108", "rect110", "rect112"]);
+			},
+			() => {
+				mergeOperationBasedOnPlatformsArrays(
+					["rect132", "rect130", "rect128"],
+					["rect88", "rect86", "rect84"]
+				);
 			}
 		]
 
