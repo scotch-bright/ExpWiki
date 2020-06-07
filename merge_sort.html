@@ -15,15 +15,15 @@
 	</style>
 </head>
 <body>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-12 mt-3">
 				<h1 class="text-center text-white mb-4">
 					Merge Sort Demo
 				</h1>
-				<h5 class="text-center text-white">
+				<h6 class="text-center text-white">
 					By Khoj Badami
-				</h5>
+				</h6>
 			</div>
 			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white mt-3">
 			</div>
@@ -158,7 +158,7 @@
 				);
 			},
 			() => {
-				speak('We then split each of those halfs again.');
+				speak('We then split each of those halfs again. We keep splitting until all arrays have just one element each.');
 				removeArrayOfBodies([
 					"level2_p2",
 					"level2_p3",
@@ -203,6 +203,7 @@
 				}
 			},
 			() => {
+				speak(`Nothing is left. So we take the last number.`);
 				removeArrayOfBodies(["rect55", "rect70", "rect57"]);
 			},
 			() => {
@@ -237,9 +238,11 @@
 				}
 			},
 			() => {
+				speak(`Nothing is left. So we take the last number.`);
 				removeArrayOfBodies(["rect108", "rect110", "rect112"]);
 			},
 			() => {
+				speak(`We have 2 sorted arrays now. So, we begin the final merge by comparing the smallest elements on each side.`);
 				mergeOperationBasedOnPlatformsArrays(
 					["rect132", "rect130", "rect128"],
 					["rect88", "rect86", "rect84"]
@@ -269,14 +272,15 @@
 		}
 
 		Swal.fire({
-			title: '<strong>About</strong>',
+			title: '<strong>About This Demo</strong>',
 			icon: 'info',
 			html: `
 				<ul style="text-align: left; line-height: 1.5em;">
-					<li>Every time you <a href="javascript:location.reload();">refresh the page</a> random array is created & the merge sort process begins.</li>
+					<li>Every time you refresh the page random array (0 - 9) is created & the merge sort process begins.</li>
 					<li>This demo <b>has sound.</b> The computer explains what is going on at each step.</li>
+					<li>A clear explanation of the Merge Sort Algorithm is given below the demo.</li>
 					<li>Look <b>below the demo</b> for a video about how it was made, credits and other details.</li>
-					<li>I am fully aware that this modal is annoying each time you refresh the page.</li>
+					<li>I am fully aware that this modal is annoying. But, you need to interact with the page so that it can start to play audio.</li>
 				</ul>
 			`,
 			showCloseButton: true,
@@ -284,11 +288,7 @@
 			confirmButtonText:
 				'<i class="fa fa-thumbs-up"></i> Great!',
 			confirmButtonAriaLabel: 'Thumbs up, great!'
-		}).then((result) => {
-			if (result.value) {
-				startDemo();
-			}
-		})
+		}).then((result) => startDemo())
 
 	</script>
 </body>
