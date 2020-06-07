@@ -10,7 +10,7 @@ let Engine = Matter.Engine,
 let engine = Engine.create();
  
 let render = Render.create({
-    element: document.body,
+    element: document.getElementById('where_the_canvas_comes'),
     engine: engine,
     options: {
         width: 1028,
@@ -70,26 +70,10 @@ let arrayOfCircles = circlePostions.map((item) => {
 	return circle;
 });
 
-Engine.run(engine);
-Render.run(render);
-
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-setInterval(function(){ 
-	let allStationary = true;
-	arrayOfCircles.forEach(
-		(item, idx) => {
-			if (item.speed > 0.3) {
-				allStationary = false;
-			}
-		}
-	);
-	if (allStationary && actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving] != undefined) {
-		actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving]();
-		currentIndexOfActionWhenBodiesStopMoving += 1;
-	}
-}, 1000);		
+		

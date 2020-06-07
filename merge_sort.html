@@ -2,13 +2,33 @@
 <html>
 <head>
 	<title>Merge Sort :: A Visual Demo By Khoj Badami</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<style type="text/css">
+		body {
+			background-color: #06AED5;
+		}
 		canvas {
-			border: 1px solid lightgrey;
+			margin-left: auto;
+			margin-right: auto;
 		}
 	</style>
 </head>
 <body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 mt-3">
+				<h1 class="text-center text-white mb-4">
+					Merge Sort Demo
+				</h1>
+				<h5 class="text-center text-white">
+					By Khoj Badami
+				</h5>
+			</div>
+			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white mt-3">
+			</div>
+		</div>
+	</div>
 	<script src="./libs/jquery-3.5.1.min.js"></script>
 	<script src="./libs/matter.min.js"></script>
 	<script src="./libs/decomp.min.js"></script>
@@ -26,6 +46,13 @@
 	<script src="./merge-sort-resources/utilityFunctions.js"></script>
 	<script type="text/javascript">
 
+		function speak(message) {
+			var msg = new SpeechSynthesisUtterance(message);
+			var voices = window.speechSynthesis.getVoices();
+			msg.voice = voices[2];
+			window.speechSynthesis.speak(msg);
+		}
+
 		function removeBodyFromWorldAndBodiesArray(bodyName) {
 			if (allBodies[bodyName] == undefined) return;
 			World.remove(world, allBodies[bodyName]);
@@ -38,7 +65,7 @@
 
 		function removeTwoBodiesOneAfterTheOther(body1Name, body2Name) {
 			removeBodyFromWorldAndBodiesArray(body1Name);
-			setTimeout(() => removeBodyFromWorldAndBodiesArray(body2Name), 1000);
+			setTimeout(() => removeBodyFromWorldAndBodiesArray(body2Name), 4000);
 		}
 
 		function compareTwoPlatformsAndBreak(platform1Name, platform2Name) {
@@ -100,6 +127,7 @@
 
 		let actionsWhenObjectsStopMoving = [
 			() => {
+				speak('First we split the array by half.');
 				removeArrayOfBodies(
 					[
 						"l0Platform1",
@@ -110,6 +138,7 @@
 				);
 			},
 			() => {
+				speak('We then split each of those halfs again.');
 				removeArrayOfBodies([
 					"level2_p2",
 					"level2_p3",
@@ -182,6 +211,49 @@
 				);
 			}
 		]
+
+		function startDemo() {
+			speak('Welcome to the merge sort demo!');
+			Engine.run(engine);
+			Render.run(render);
+
+			setInterval(function(){ 
+				let allStationary = true;
+				arrayOfCircles.forEach(
+					(item, idx) => {
+						if (item.speed > 0.3) {
+							allStationary = false;
+						}
+					}
+				);
+				if (allStationary && actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving] != undefined) {
+					actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving]();
+					currentIndexOfActionWhenBodiesStopMoving += 1;
+				}
+			}, 4000);
+		}
+
+		Swal.fire({
+			title: '<strong>About</strong>',
+			icon: 'info',
+			html: `
+				<ul style="text-align: left; line-height: 1.5em;">
+					<li>Every time you <a href="javascript:location.reload();">refresh the page</a> random array is created & the merge sort process begins.</li>
+					<li>This demo <b>has sound.</b> The computer explains what is going on at each step.</li>
+					<li>Look <b>below the demo</b> for a video about how it was made, credits and other details.</li>
+					<li>I am fully aware that this modal is annoying each time you refresh the page.</li>
+				</ul>
+			`,
+			showCloseButton: true,
+			focusConfirm: false,
+			confirmButtonText:
+				'<i class="fa fa-thumbs-up"></i> Great!',
+			confirmButtonAriaLabel: 'Thumbs up, great!'
+		}).then((result) => {
+			if (result.value) {
+				startDemo();
+			}
+		})
 
 	</script>
 </body>
