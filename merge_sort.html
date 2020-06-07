@@ -65,16 +65,22 @@
 
 		function removeTwoBodiesOneAfterTheOther(body1Name, body2Name) {
 			removeBodyFromWorldAndBodiesArray(body1Name);
-			setTimeout(() => removeBodyFromWorldAndBodiesArray(body2Name), 4000);
+			setTimeout(() => removeBodyFromWorldAndBodiesArray(body2Name), 5000);
 		}
 
 		function compareTwoPlatformsAndBreak(platform1Name, platform2Name) {
 			let v1 = findClosestCircleValueToPlank(allBodies[platform1Name]);
 			let v2 = findClosestCircleValueToPlank(allBodies[platform2Name]);
 			if (v1 < v2) {
+				speak(`${v1} is less than ${v2}. So, ${v1} moves first.`);
 				removeArrayOfBodies([platform1Name]);
 			}
+			else if (v1 == v2) {
+				speak(`${v1} equals ${v2}. So, any one can move first.`);
+				removeArrayOfBodies([platform2Name]);
+			}
 			else {
+				speak(`${v2} is less than ${v1}. So, ${v2} moves first.`);
 				removeArrayOfBodies([platform2Name]);
 			}
 		}
@@ -87,6 +93,8 @@
 				if (platformArray1[pi] == undefined) {
 					let idx = pj;
 					actionsWhenObjectsStopMoving.push(() => {
+						let val = findClosestCircleValueToPlank(allBodies[platformArray2[idx]]);
+						speak(`Nothing is left on the other side. So, we just move ${val}.`);
 						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
 					});
 					pj += 1;
@@ -96,6 +104,8 @@
 				if (platformArray2[pj] == undefined) {
 					let idx = pi;
 					actionsWhenObjectsStopMoving.push(() => {
+						let val = findClosestCircleValueToPlank(allBodies[platformArray1[idx]]);
+						speak(`Nothing is left on the other side. So, we just move ${val}.`);
 						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
 					});
 					pi += 1;
@@ -108,14 +118,24 @@
 				if (p1Val < p2Val) {
 					let idx = pi;
 					actionsWhenObjectsStopMoving.push(() => {
+						speak(`${p1Val} is smaller than ${p2Val}. So, ${p1Val} moves first.`);
 						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
 					});
 					pi += 1;
+					continue;
+				} else if (p2Val == p1Val) {
+					let idx = pj;
+					actionsWhenObjectsStopMoving.push(() => {
+						speak(`${p1Val} equals ${p2Val}. So, any one can move first.`);
+						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+					});
+					pj += 1;
 					continue;
 				}
 				else {
 					let idx = pj;
 					actionsWhenObjectsStopMoving.push(() => {
+						speak(`${p2Val} is smaller than ${p1Val}. So, ${p2Val} moves first.`);
 						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
 					});
 					pj += 1;
@@ -154,13 +174,21 @@
 				let v1 = findClosestCircleValueToPlank(allBodies.l2p2);
 				let v2 = findClosestCircleValueToPlank(allBodies.l2p3);
 				if (v1 < v2) {
+					speak(`Now we start the merge. ${v1} is less than ${v2}. So, ${v1} moves first. Then ${v2}`);
 					removeTwoBodiesOneAfterTheOther("l2p2", "l2p3");
 				}
+				else if (v1 == v2) {
+					speak(`Now we start the merge. ${v1} equals ${v2}. So, they can move in any order.`);
+					removeTwoBodiesOneAfterTheOther("l2p3", "l2p2");
+				}
 				else {
+					speak(`Now we start the merge. ${v2} is less than ${v1}. So, ${v2} moves first. Then ${v1}`);
 					removeTwoBodiesOneAfterTheOther("l2p3", "l2p2");
 				}
 			},
 			() => {
+				let v = findClosestCircleValueToPlank(allBodies.rect1027);
+				speak(`${v} is a sorted array of just 1 element. We just move it ahead.`);
 				removeArrayOfBodies(["rect1027"]);
 			},
 			() => {
@@ -181,13 +209,20 @@
 				let v1 = findClosestCircleValueToPlank(allBodies.l2p4);
 				let v2 = findClosestCircleValueToPlank(allBodies.l2p5);
 				if (v1 < v2) {
+					speak(`Merging other side. ${v1} is less than ${v2}. So, ${v1} moves first. Then ${v2}`);
 					removeTwoBodiesOneAfterTheOther("l2p4", "l2p5");
 				}
+				else if (v1 == v2) {
+					speak(`Merging other side. ${v1} equals ${v2}. Any one can move first.`);
+				}
 				else {
+					speak(`Merging other side. ${v2} is less than ${v1}. So, ${v2} moves first. Then ${v1}`);
 					removeTwoBodiesOneAfterTheOther("l2p5", "l2p4");
 				}
 			},
 			() => {
+				let v = findClosestCircleValueToPlank(allBodies.rect1033);
+				speak(`${v} is a sorted array of just 1 element. We just move it ahead.`);
 				removeArrayOfBodies(["rect1033"]);
 			},
 			() => {
@@ -230,7 +265,7 @@
 					actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving]();
 					currentIndexOfActionWhenBodiesStopMoving += 1;
 				}
-			}, 4000);
+			}, 6000);
 		}
 
 		Swal.fire({
