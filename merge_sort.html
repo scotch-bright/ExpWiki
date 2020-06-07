@@ -143,6 +143,14 @@
 				}
 
 			}
+
+			actionsWhenObjectsStopMoving.push(() => {
+				speak(`I am just going to straighten these balls for you so that the numbers are clear. We have completely sorted array. You can refresh the page to see the whole process again with a new set of numbers.`);
+				arrayOfCircles.forEach((circle) => {
+					Matter.Body.rotate(circle, 0 - circle.angle);
+				});
+			})
+
 		}
 
 		let actionsWhenObjectsStopMoving = [
@@ -174,15 +182,15 @@
 				let v1 = findClosestCircleValueToPlank(allBodies.l2p2);
 				let v2 = findClosestCircleValueToPlank(allBodies.l2p3);
 				if (v1 < v2) {
-					speak(`Now we start the merge. ${v1} is less than ${v2}. So, ${v1} moves first. Then ${v2}`);
+					speak(`Now we start the merge. ${v1} is less than ${v2}. So, ${v1} moves first. Then ${v2}. This 2 element array is now sorted.`);
 					removeTwoBodiesOneAfterTheOther("l2p2", "l2p3");
 				}
 				else if (v1 == v2) {
-					speak(`Now we start the merge. ${v1} equals ${v2}. So, they can move in any order.`);
+					speak(`Now we start the merge. ${v1} equals ${v2}. So, they can move in any order. This 2 element array is now sorted.`);
 					removeTwoBodiesOneAfterTheOther("l2p3", "l2p2");
 				}
 				else {
-					speak(`Now we start the merge. ${v2} is less than ${v1}. So, ${v2} moves first. Then ${v1}`);
+					speak(`Now we start the merge. ${v2} is less than ${v1}. So, ${v2} moves first. Then ${v1}. This 2 element array is now sorted.`);
 					removeTwoBodiesOneAfterTheOther("l2p3", "l2p2");
 				}
 			},
@@ -251,7 +259,7 @@
 		]
 
 		function startDemo() {
-			speak('Welcome to the merge sort demo!');
+			speak('Welcome to the merge sort demo! I will explain what is going on. One step at a time.');
 			Engine.run(engine);
 			Render.run(render);
 
