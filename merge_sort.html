@@ -18,12 +18,9 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-12 mt-3">
-				<h1 class="text-center text-white mb-4">
+				<h1 class="text-center text-white">
 					Merge Sort Demo
 				</h1>
-				<h6 class="text-center text-white">
-					By Khoj Badami
-				</h6>
 			</div>
 			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white mt-3">
 			</div>
@@ -40,6 +37,7 @@
 		let currentIndexOfActionWhenBodiesStopMoving = 0;
 		let numbersToBeSorted = [];
 		let numberOfSplits = 0;
+		let voice = undefined;
 	</script>
 
 	<script src="./merge-sort-resources/matterJSWorldSetup.js"></script>
@@ -48,8 +46,7 @@
 
 		function speak(message) {
 			var msg = new SpeechSynthesisUtterance(message);
-			var voices = window.speechSynthesis.getVoices();
-			msg.voice = voices[2];
+			msg.voice = voice;
 			window.speechSynthesis.speak(msg);
 		}
 
@@ -145,7 +142,7 @@
 			}
 
 			actionsWhenObjectsStopMoving.push(() => {
-				speak(`I am just going to straighten these balls for you so that the numbers are clear. We have completely sorted array. You can refresh the page to see the whole process again with a new set of numbers.`);
+				speak(`I am just going to straighten these balls for you so that the numbers are clear. We have a completely sorted array. You can refresh the page to see the whole process again with a new set of numbers.`);
 				arrayOfCircles.forEach((circle) => {
 					Matter.Body.rotate(circle, 0 - circle.angle);
 				});
@@ -155,7 +152,7 @@
 
 		let actionsWhenObjectsStopMoving = [
 			() => {
-				speak('First we split the array by half.');
+				speak('First we split the array by half. This is the recursive step.');
 				removeArrayOfBodies(
 					[
 						"l0Platform1",
@@ -166,7 +163,7 @@
 				);
 			},
 			() => {
-				speak('We then split each of those halfs again. We keep splitting until all arrays have just one element each.');
+				speak('We then split each of those halfs again. We keep splitting until all arrays have just one element.');
 				removeArrayOfBodies([
 					"level2_p2",
 					"level2_p3",
@@ -223,6 +220,7 @@
 				}
 				else if (v1 == v2) {
 					speak(`Merging other side. ${v1} equals ${v2}. Any one can move first.`);
+					removeTwoBodiesOneAfterTheOther("l2p5", "l2p4");
 				}
 				else {
 					speak(`Merging other side. ${v2} is less than ${v1}. So, ${v2} moves first. Then ${v1}`);
@@ -259,7 +257,7 @@
 		]
 
 		function startDemo() {
-			speak('Welcome to the merge sort demo! I will explain what is going on. One step at a time.');
+			speak('Welcome to the merge sort demo! I will explain the process one step at a time.');
 			Engine.run(engine);
 			Render.run(render);
 
@@ -288,7 +286,6 @@
 					<li>This demo <b>has sound.</b> The computer explains what is going on at each step.</li>
 					<li>A clear explanation of the Merge Sort Algorithm is given below the demo.</li>
 					<li>Look <b>below the demo</b> for a video about how it was made, credits and other details.</li>
-					<li>I am fully aware that this modal is annoying. But, you need to interact with the page so that it can start to play audio.</li>
 				</ul>
 			`,
 			showCloseButton: true,
@@ -297,6 +294,14 @@
 				'<i class="fa fa-thumbs-up"></i> Great!',
 			confirmButtonAriaLabel: 'Thumbs up, great!'
 		}).then((result) => startDemo())
+
+		let voices = window.speechSynthesis.getVoices();
+		window.speechSynthesis.onvoiceschanged = function() {
+			voices = window.speechSynthesis.getVoices();
+			voice = voices.find(
+				(voice) => voice.lang == 'en-UK'
+			);
+		};
 
 	</script>
 </body>

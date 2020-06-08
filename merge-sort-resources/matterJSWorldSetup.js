@@ -61,7 +61,7 @@ let circlePostions = [
 ];
 
 let arrayOfCircles = circlePostions.map((item) => {
-	let number = getRandomInt(0, 9);
+	let number = getRandomInt(0, 2);
 	numbersToBeSorted.push(number);
 	let circle = new circleMaker(
 		number, item[0], item[1]
