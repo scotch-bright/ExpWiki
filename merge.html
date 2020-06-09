@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Merge Sort :: A Visual Demo By Khoj Badami</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<style type="text/css">
+		body {
+			background-color: #06AED5;
+		}
+		canvas {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12 mt-3">
+				<h1 class="text-white">
+					Merge Sub Routine Demo
+				</h1>
+			</div>
+			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white mt-3">
+			</div>
+			<div class="col-sm-12 mt-3 mb-3">
+				<div>
+					<div class="card">
+						<div class="card-header">
+						  <h4>Credits, Tools Used & Source</h4>
+						</div>
+						<ul class="list-group list-group-flush">
+						  <li class="list-group-item">
+							<b>Made By</b>: <a href="https://github.com/scotch-bright" target="_blank">Khoj Badami</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>2D Physics Engine</b>: <a href="https://brm.io/matter-js/" target="_blank">Matter JS</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>Course Made In</b>: <a href="https://inkscape.org/" target="_blank">InkScape (Open Source Vector Graphics Program)</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>Speech Synthesis</b>: <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis" target="_blank">SpeechSynthesis API</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>Source Code</b>: <a href="https://github.com/scotch-bright/ExpWiki" target="_blank">GitHub Project</a>
+						  </li>
+						</ul>
+					  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="./libs/jquery-3.5.1.min.js"></script>
+	<script src="./libs/matter.min.js"></script>
+	<script src="./libs/decomp.min.js"></script>
+	<script src="./libs/path-data-polyfill.js"></script>
+	<script src="./merge-sort-resources/matterJSBodyBuilders.js"></script>
+	
+	<script type="text/javascript">
+		let allBodies = {};
+		let currentIndexOfActionWhenBodiesStopMoving = 0;
+		let numbersToBeSorted = [];
+		let numberOfSplits = 0;
+		let voice = undefined;
+	</script>
+
+	<script src="./merge-sort-resources/matterJSWorldSetupOnlyMerge.js"></script>
+	<script src="./merge-sort-resources/utilityFunctions.js"></script>
+	<script type="text/javascript">
+
+		function speak(message) {
+			var msg = new SpeechSynthesisUtterance(message);
+			msg.voice = voice;
+			msg.rate = 1.1;
+			window.speechSynthesis.cancel();
+			window.speechSynthesis.speak(msg);
+		}
+
+		function removeBodyFromWorldAndBodiesArray(bodyName) {
+			if (allBodies[bodyName] == undefined) return;
+			World.remove(world, allBodies[bodyName]);
+			delete allBodies[bodyName];
+		}
+
+		function mergeOperationBasedOnPlatformsArrays(platformArray1, platformArray2) {
+			let pi = 0;
+			let pj = 0;
+			while (platformArray1[pi] != undefined || platformArray2[pj] != undefined) {
+
+				if (platformArray1[pi] == undefined) {
+					let idx = pj;
+					actionsWhenObjectsStopMoving.push(() => {
+						let val = findClosestCircleValueToPlank(allBodies[platformArray2[idx]]);
+						speak(`Nothing is left on the other side. So, we just move ${val}.`);
+						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+					});
+					pj += 1;
+					continue;
+				}
+
+				if (platformArray2[pj] == undefined) {
+					let idx = pi;
+					actionsWhenObjectsStopMoving.push(() => {
+						let val = findClosestCircleValueToPlank(allBodies[platformArray1[idx]]);
+						speak(`Nothing is left on the other side. So, we just move ${val}.`);
+						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+					});
+					pi += 1;
+					continue;
+				}
+
+				let p1Val = findClosestCircleValueToPlank(allBodies[platformArray1[pi]]);
+				let p2Val = findClosestCircleValueToPlank(allBodies[platformArray2[pj]]);
+
+				if (p1Val < p2Val) {
+					let idx = pi;
+					actionsWhenObjectsStopMoving.push(() => {
+						speak(`${p1Val} is smaller than ${p2Val}. So, ${p1Val} moves first.`);
+						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+					});
+					pi += 1;
+					continue;
+				} else if (p2Val == p1Val) {
+					let idx = pj;
+					actionsWhenObjectsStopMoving.push(() => {
+						speak(`${p1Val} equals ${p2Val}. So, any one can move first.`);
+						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+					});
+					pj += 1;
+					continue;
+				}
+				else {
+					let idx = pj;
+					actionsWhenObjectsStopMoving.push(() => {
+						speak(`${p2Val} is smaller than ${p1Val}. So, ${p2Val} moves first.`);
+						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+					});
+					pj += 1;
+					continue;
+				}
+
+			}
+
+			actionsWhenObjectsStopMoving.push(() => {
+				speak(`I am just going to straighten these balls for you so that the numbers are clear. We have a completely sorted array. You can refresh the page to see the whole process again with a new set of numbers.`);
+				arrayOfCircles.forEach((circle) => {
+					Matter.Body.rotate(circle, 0 - circle.angle);
+				});
+			})
+
+		}
+
+		let actionsWhenObjectsStopMoving = [
+			() => {
+				mergeOperationBasedOnPlatformsArrays(
+					['rect88', 'rect86', 'rect84'],
+					['rect132', 'rect130', 'rect128']
+				);
+			}
+		]
+
+		function startDemo() {
+			speak('Welcome to the merge sub routine demo! The key idea is that, when we want to merge 2 sorted arrays, we just have to compare the two smallest numbers to decide what the next number in the merged array will be. We can ignore the rest. This makes it a big o of n operation.');
+			Engine.run(engine);
+			Render.run(render);
+
+			setInterval(function(){ 
+				let allStationary = true;
+				arrayOfCircles.forEach(
+					(item, idx) => {
+						if (item.speed > 0.3) {
+							allStationary = false;
+						}
+					}
+				);
+				if (allStationary && actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving] != undefined) {
+					actionsWhenObjectsStopMoving[currentIndexOfActionWhenBodiesStopMoving]();
+					currentIndexOfActionWhenBodiesStopMoving += 1;
+				}
+			}, 6000);
+		}
+
+		Swal.fire({
+			title: '<strong>About This Demo</strong>',
+			icon: 'info',
+			html: `
+				<ul style="text-align: left; line-height: 1.5em;">
+					<li>This demo <b>has sound.</b> The computer explains what is going on at each step.</li>
+				</ul>
+			`,
+			showCloseButton: true,
+			focusConfirm: false,
+			confirmButtonText:
+				'<i class="fa fa-thumbs-up"></i> Great!',
+			confirmButtonAriaLabel: 'Thumbs up, great!'
+		}).then((result) => startDemo())
+
+		let voices = window.speechSynthesis.getVoices();
+		window.speechSynthesis.onvoiceschanged = function() {
+			voices = window.speechSynthesis.getVoices();
+			voice = voices.find(
+				(voice) => voice.lang == 'en-UK' || voice.lang == 'en-GB'
+			);
+			if (voice == undefined) {
+				voice = voices.find(
+					(voice) => voice.lang == 'en-US'
+				);
+			}
+		};
+
+	</script>
+</body>
+</html>
