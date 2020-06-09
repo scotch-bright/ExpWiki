@@ -24,6 +24,32 @@
 			</div>
 			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white mt-3">
 			</div>
+			<div class="col-sm-12 mt-3 mb-3">
+				<div>
+					<div class="card">
+						<div class="card-header">
+						  <h4>Credits, Tools Used & Source</h4>
+						</div>
+						<ul class="list-group list-group-flush">
+						  <li class="list-group-item">
+							<b>Made By</b>: <a href="https://github.com/scotch-bright" target="_blank">Khoj Badami</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>2D Physics Engine</b>: <a href="https://brm.io/matter-js/" target="_blank">Matter JS</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>Course Made In</b>: <a href="https://inkscape.org/" target="_blank">InkScape (Open Source Vector Graphics Program)</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>Speech Synthesis</b>: <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis" target="_blank">SpeechSynthesis API</a>
+						  </li>
+						  <li class="list-group-item">
+							<b>Source Code</b>: <a href="https://github.com/scotch-bright/ExpWiki" target="_blank">GitHub Project</a>
+						  </li>
+						</ul>
+					  </div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script src="./libs/jquery-3.5.1.min.js"></script>
@@ -47,6 +73,8 @@
 		function speak(message) {
 			var msg = new SpeechSynthesisUtterance(message);
 			msg.voice = voice;
+			msg.rate = 1.1;
+			window.speechSynthesis.cancel();
 			window.speechSynthesis.speak(msg);
 		}
 
@@ -152,7 +180,7 @@
 
 		let actionsWhenObjectsStopMoving = [
 			() => {
-				speak('First we split the array by half. This is the recursive step.');
+				speak('First we split the array by half. We will split each of those halfs again.');
 				removeArrayOfBodies(
 					[
 						"l0Platform1",
@@ -163,7 +191,7 @@
 				);
 			},
 			() => {
-				speak('We then split each of those halfs again. We keep splitting until all arrays have just one element.');
+				speak('We keep splitting until all arrays have just one element.');
 				removeArrayOfBodies([
 					"level2_p2",
 					"level2_p3",
@@ -202,16 +230,20 @@
 			() => {
 				if (allBodies["rect57"] == undefined) {
 					compareTwoPlatformsAndBreak("rect55", "rect70");
+					setTimeout(
+						() => {
+							speak(`Now we just take the last number.`);
+							removeArrayOfBodies(["rect55", "rect70", "rect57"]);
+						},
+						4000
+					);
 				}
 				else {
-					// TO DO :: Here we just remove the first and then the second one.
-					// Since the two elements are sorted.
-					compareTwoPlatformsAndBreak("rect57", "rect55");
+					let v1 = findClosestCircleValueToPlank(allBodies.rect57);
+					let v2 = findClosestCircleValueToPlank(allBodies.rect55);
+					speak(`Since the array on the right is already sorted. We just move ${v1} and then ${v2}`);
+					removeTwoBodiesOneAfterTheOther("rect57", "rect55");
 				}
-			},
-			() => {
-				speak(`Nothing is left. So we take the last number.`);
-				removeArrayOfBodies(["rect55", "rect70", "rect57"]);
 			},
 			() => {
 				let v1 = findClosestCircleValueToPlank(allBodies.l2p4);
@@ -239,18 +271,24 @@
 			},
 			() => {
 				if (allBodies["rect108"] == undefined) {
-					compareTwoPlatformsAndBreak("rect110", "rect112");
+					let v1 = findClosestCircleValueToPlank(allBodies.rect110);
+					let v2 = findClosestCircleValueToPlank(allBodies.rect112);
+					speak(`Since the array on the left is already sorted. We just move ${v1} and then ${v2}`);
+					removeTwoBodiesOneAfterTheOther("rect110", "rect112");
 				}
 				else {
 					compareTwoPlatformsAndBreak("rect112", "rect108");
+					setTimeout(
+						() => {
+							speak(`Now we just take the last number.`);
+							removeArrayOfBodies(["rect108", "rect110", "rect112"]);
+						},
+						4000
+					);
 				}
 			},
 			() => {
-				speak(`Nothing is left. So we take the last number.`);
-				removeArrayOfBodies(["rect108", "rect110", "rect112"]);
-			},
-			() => {
-				speak(`We have 2 sorted arrays now. So, we begin the final merge by comparing the smallest elements on each side.`);
+				speak(`We have 2 sorted arrays. We begin the final merge by comparing the smallest elements on each side.`);
 				mergeOperationBasedOnPlatformsArrays(
 					["rect132", "rect130", "rect128"],
 					["rect88", "rect86", "rect84"]
@@ -301,8 +339,13 @@
 		window.speechSynthesis.onvoiceschanged = function() {
 			voices = window.speechSynthesis.getVoices();
 			voice = voices.find(
-				(voice) => voice.lang == 'en-UK'
+				(voice) => voice.lang == 'en-UK' || voice.lang == 'en-GB'
 			);
+			if (voice == undefined) {
+				voice = voices.find(
+					(voice) => voice.lang == 'en-US'
+				);
+			}
 		};
 
 	</script>
