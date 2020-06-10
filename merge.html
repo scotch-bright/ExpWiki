@@ -30,6 +30,11 @@
 								<td>
 									<strong>
 										Number Of Comparisons
+										<br /><br />
+										<small>
+											<strong>Notice That:</strong>
+											In the worst case there are n-1 comparisons.
+										</small>
 									</strong>
 								</td>
 								<td>
@@ -215,7 +220,7 @@
 		]
 
 		function startDemo() {
-			speak('Welcome to the merge sub routine demo! The key idea is that, when we want to merge 2 sorted arrays, we just have to compare the two smallest numbers to decide what the next number in the merged array will be. We can ignore the rest. This makes it a big o of n operation.');
+			speak('Welcome to the merge sub routine demo! The key idea is that, when we want to merge 2 sorted arrays, we just have to compare the two smallest numbers to decide what the next number in the merged array will be. We can ignore the rest.');
 			Engine.run(engine);
 			Render.run(render);
 
