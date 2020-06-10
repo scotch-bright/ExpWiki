@@ -17,12 +17,30 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-sm-12 mt-3">
-				<h1 class="text-white">
+			<div class="col-sm-12 mt-3 mb-3">
+				<h1 class="text-white text-center">
 					Merge Sub Routine Demo
 				</h1>
 			</div>
-			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white mt-3">
+			<div class="col-sm-12">
+				<div class="row">
+					<div class="col-sm-4 offset-sm-4">
+						<table class="table" style="background-color: white;">
+							<tr>
+								<td>
+									<strong>
+										Number Of Comparisons
+									</strong>
+								</td>
+								<td>
+									<span id="number_of_comparisons">0</span>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="where_the_canvas_comes" class="col-sm-12 text-center text-white">
 			</div>
 			<div class="col-sm-12 mt-3 mb-3">
 				<div>
@@ -84,6 +102,17 @@
 			delete allBodies[bodyName];
 		}
 
+		function highlightPlatform(platformName) {
+			allBodies[platformName].render.fillStyle = "red";
+		}
+
+		function incrementNumberOfComparisons() {
+			let currentValue  = parseInt($("#number_of_comparisons").text());
+			$("#number_of_comparisons").text(currentValue + 1);
+		}
+
+		const timeForHighlight = 1000;
+
 		function mergeOperationBasedOnPlatformsArrays(platformArray1, platformArray2) {
 			let pi = 0;
 			let pj = 0;
@@ -92,9 +121,12 @@
 				if (platformArray1[pi] == undefined) {
 					let idx = pj;
 					actionsWhenObjectsStopMoving.push(() => {
+						highlightPlatform(platformArray2[idx]);
 						let val = findClosestCircleValueToPlank(allBodies[platformArray2[idx]]);
 						speak(`Nothing is left on the other side. So, we just move ${val}.`);
-						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+						setTimeout(() => {
+							removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+						}, timeForHighlight);
 					});
 					pj += 1;
 					continue;
@@ -103,9 +135,12 @@
 				if (platformArray2[pj] == undefined) {
 					let idx = pi;
 					actionsWhenObjectsStopMoving.push(() => {
+						highlightPlatform(platformArray1[idx]);
 						let val = findClosestCircleValueToPlank(allBodies[platformArray1[idx]]);
 						speak(`Nothing is left on the other side. So, we just move ${val}.`);
-						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+						setTimeout(() => {
+							removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+						}, timeForHighlight);
 					});
 					pi += 1;
 					continue;
@@ -113,29 +148,47 @@
 
 				let p1Val = findClosestCircleValueToPlank(allBodies[platformArray1[pi]]);
 				let p2Val = findClosestCircleValueToPlank(allBodies[platformArray2[pj]]);
-
+				
 				if (p1Val < p2Val) {
 					let idx = pi;
+					let idx2 = pj;
 					actionsWhenObjectsStopMoving.push(() => {
+						incrementNumberOfComparisons();
+						highlightPlatform(platformArray1[idx]);
+						highlightPlatform(platformArray2[idx2]);
 						speak(`${p1Val} is smaller than ${p2Val}. So, ${p1Val} moves first.`);
-						removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+						setTimeout(() => {
+							removeBodyFromWorldAndBodiesArray(platformArray1[idx]);
+						}, timeForHighlight);
 					});
 					pi += 1;
 					continue;
 				} else if (p2Val == p1Val) {
 					let idx = pj;
+					let idx2 = pi;
 					actionsWhenObjectsStopMoving.push(() => {
+						incrementNumberOfComparisons();
+						highlightPlatform(platformArray2[idx]);
+						highlightPlatform(platformArray1[idx2]);
 						speak(`${p1Val} equals ${p2Val}. So, any one can move first.`);
-						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+						setTimeout(() => {
+							removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+						}, timeForHighlight);
 					});
 					pj += 1;
 					continue;
 				}
 				else {
 					let idx = pj;
+					let idx2 = pi;
 					actionsWhenObjectsStopMoving.push(() => {
+						incrementNumberOfComparisons();
+						highlightPlatform(platformArray2[idx]);
+						highlightPlatform(platformArray1[idx2]);
 						speak(`${p2Val} is smaller than ${p1Val}. So, ${p2Val} moves first.`);
-						removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+						setTimeout(() => {
+							removeBodyFromWorldAndBodiesArray(platformArray2[idx]);
+						}, timeForHighlight);
 					});
 					pj += 1;
 					continue;
