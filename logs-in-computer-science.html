@@ -3,12 +3,18 @@
 <head>
   <title>SVG.js</title>
   <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
+<form id="input">
+    <input type="number" id="inputSize" />
+    <input type="submit" />
+</form>
 <div id="svg_diagram_comes_here"></div>
 <script>
-var draw = undefined;
-let unitSide = 20;
+let draw = undefined;
+let unitSide = 50;
+let theStack = [];
 
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
@@ -20,8 +26,9 @@ function getRandomColor() {
 }
 
 function drawRectangleWithRandomColor(options) {
+    console.log(['drawing block with options', options]);
     draw.rect(
-        options.size *unitSide, 
+        options.size * unitSide, 
         unitSide).move(
         options.left * unitSide, 
         options.level * unitSide).attr(
@@ -32,24 +39,58 @@ function drawRectangleWithRandomColor(options) {
             });
 }
 
-SVG.on(document, 'DOMContentLoaded', function() {
-    draw = SVG().addTo('#svg_diagram_comes_here').size('100%', '100%');
-    drawRectangleWithRandomColor({
-        size: 10,
-        left: 0,
-        level: 0
+function correctLastRowOfStack() {
+    secondLastRowIndex = theStack.length - 2;
+    numberOfOnes = theStack[secondLastRowIndex].filter( item => item == 1 ).map(
+        (item) => {
+            theStack[theStack.length - 1].push(1);
+        }
+    );
+}
+
+function setUpStack(size, level) {
+    if (theStack[level] == undefined) theStack[level] = [];
+    theStack[level].push(size);
+    if (size != 1) {
+        let halfSize = parseInt(size / 2);
+        let otherHalfSize = size - halfSize;
+        setUpStack(halfSize, level + 1);
+        setUpStack(otherHalfSize, level + 1);
+    }
+}
+
+function convertStackToDrawing() {
+    theStack.map((row, levelIndex) => {
+        let left = 0;
+        console.log(row);
+        row.map(( block ) => {
+            console.log(block);
+            drawRectangleWithRandomColor({
+                size: block,
+                left: left,
+                level: levelIndex
+            });
+            left += block;
+        });
     });
-    drawRectangleWithRandomColor({
-        size: 5,
-        left: 0,
-        level: 1
+}
+
+function drawStack(size) {
+    $("#svg_diagram_comes_here").html('');
+    theStack = [];
+    draw = SVG().addTo('#svg_diagram_comes_here').size('100%', unitSide * 20);
+    setUpStack(size, 0);
+    correctLastRowOfStack();
+    convertStackToDrawing();
+}
+
+$( document ).ready(function() {
+    $( "#input" ).submit(function( event ) {
+        event.preventDefault();
+        let inputSize = parseInt($("#inputSize").val());
+        drawStack(inputSize);
     });
-    drawRectangleWithRandomColor({
-        size: 5,
-        left: 5,
-        level: 1
-    });
-})
+});
 
 
 </script>
