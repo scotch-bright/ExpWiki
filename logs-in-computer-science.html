@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SVG.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+</head>
+<body>
+<div id="svg_diagram_comes_here"></div>
+<script>
+var draw = undefined;
+let unitSide = 20;
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function drawRectangleWithRandomColor(options) {
+    draw.rect(
+        options.size *unitSide, 
+        unitSide).move(
+        options.left * unitSide, 
+        options.level * unitSide).attr(
+            { 
+                fill: getRandomColor(),
+                stroke: '#000',
+                'stroke-width': 1
+            });
+}
+
+SVG.on(document, 'DOMContentLoaded', function() {
+    draw = SVG().addTo('#svg_diagram_comes_here').size('100%', '100%');
+    drawRectangleWithRandomColor({
+        size: 10,
+        left: 0,
+        level: 0
+    });
+    drawRectangleWithRandomColor({
+        size: 5,
+        left: 0,
+        level: 1
+    });
+    drawRectangleWithRandomColor({
+        size: 5,
+        left: 5,
+        level: 1
+    });
+})
+
+
+</script>
+</body>
+</html>
