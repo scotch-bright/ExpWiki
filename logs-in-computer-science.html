@@ -7,7 +7,8 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="http://cdn.jsdelivr.net/vue/2.0.3/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src="./libs/svg-pan-zoom.js"></script>
   <style>
       #svg_diagram_comes_here {
           border: 1px solid lightsteelblue;
@@ -29,11 +30,11 @@
                 <input type="submit" class="btn btn-primary" />
             </form>
         </div>
-        <div class="col-sm-4 mt-2">
+        <div class="col-sm-12 mt-2">
             <div id="svg_diagram_comes_here">
             </div>
         </div>
-        <div class="col-sm-8 mt-2">
+        <div class="col-sm-12 mt-2">
             <div id="table">
                 <table class="table">
                     <thead class="thead-dark">
@@ -139,6 +140,13 @@
                 stackSize: theStack.length,
                 log: Math.log2(size).toFixed(2)
         });
+
+        window.zoomStackDiagram = svgPanZoom('#svg_diagram_comes_here svg', {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: true,
+            center: false
+        });
     }
 
     $( document ).ready(function() {
@@ -160,5 +168,6 @@
     })
 
 </script>
+
 </body>
 </html>
