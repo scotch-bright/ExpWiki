@@ -10,9 +10,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   <script src="./libs/svg-pan-zoom.js"></script>
   <style>
-      #svg_diagram_comes_here {
+      #svg_diagram_comes_here, #svg_diagram_2_comes_here {
           border: 1px solid lightsteelblue;
-          min-height: 200px;
+          min-height: 300px;
       }
   </style>
 </head>
@@ -30,11 +30,12 @@
                 <input type="submit" class="btn btn-primary" />
             </form>
         </div>
-        <div class="col-sm-12 mt-2">
+        <div class="col-sm-12 mt-4">
+            <h5 class="text-center">Stack Size Visualizer</h5>
             <div id="svg_diagram_comes_here">
             </div>
         </div>
-        <div class="col-sm-12 mt-2">
+        <div class="col-sm-12 mt-4">
             <div id="table">
                 <table class="table">
                     <thead class="thead-dark">
@@ -64,11 +65,17 @@
                 </table>
             </div>
         </div>
+        <div class="col-sm-12 mt-4">
+            <h5 class="text-center">Exponential Growth Visualizer</h5>
+            <div id="svg_diagram_2_comes_here">
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
     let draw = undefined;
+    let draw2 = undefined;
     let unitSide = 10;
     let theStack = [];
 
@@ -81,8 +88,8 @@
     return color;
     }
 
-    function drawRectangleWithRandomColor(options) {
-        draw.rect(
+    function drawRectangleWithRandomColor(options, drawing) {
+        drawing.rect(
             options.size * unitSide, 
             unitSide).move(
             options.left * unitSide, 
@@ -92,6 +99,16 @@
                     stroke: '#000',
                     'stroke-width': 1
                 });
+                
+        drawing.text(`${options.size}`).move(
+            options.left * unitSide + 2,
+            options.level * unitSide + 6
+        ).font({
+            size: 5
+        }).attr(
+        { 
+            fill: '#fff'
+        });
     }
 
     function correctLastRowOfStack() {
@@ -122,19 +139,72 @@
                     size: block,
                     left: left,
                     level: levelIndex
-                });
+                }, draw);
                 left += block;
             });
         });
+
+        // Drawing the stack labels
+        let lowestLevel = theStack.length;
+        let currentLevel = lowestLevel;
+        let currentLabel = 1;
+        while (currentLevel != 0) {
+            
+            draw.text(`${currentLabel}`).move(
+                theStack[0] * unitSide + 5,
+                (currentLevel - 1) * unitSide + 6
+            ).font({
+                size: 5
+            }).attr(
+            { 
+                fill: '#000'
+            });
+
+            currentLabel += 1;
+            currentLevel -= 1;
+        }
+    }
+
+    function drawExponentialStack() {
+        let lowestLevel = theStack.length - 1;
+        let currentLevel = lowestLevel;
+        let currentSize = 2;
+        let currentLevelLabel = 1;
+        while (currentLevel != 0) {
+            drawRectangleWithRandomColor({
+                    size: currentSize,
+                    left: 0,
+                    level: currentLevel
+                }, draw2);
+
+
+            draw2.text(`${currentLevelLabel}`).move(
+                -10,
+                (currentLevel * unitSide) + 6
+            ).font({
+                size: 5
+            }).attr(
+            { 
+                fill: '#000'
+            });
+
+            currentLevelLabel += 1;
+            currentSize = currentSize * 2;
+            currentLevel -= 1;
+        }
     }
 
     function drawStack(size) {
         $("#svg_diagram_comes_here").html('');
+        $("#svg_diagram_2_comes_here").html('');
         theStack = [];
-        draw = SVG().addTo('#svg_diagram_comes_here').size('100%', unitSide * 20);
+        draw = SVG().addTo('#svg_diagram_comes_here').size('100%', 300);
+        draw2 = SVG().addTo('#svg_diagram_2_comes_here').size('100%', 300);
         setUpStack(size, 0);
         correctLastRowOfStack();
         convertStackToDrawing();
+        drawExponentialStack();
+
         tableRows.push({
                 size: size,
                 stackSize: theStack.length,
@@ -147,6 +217,14 @@
             fit: true,
             center: false
         });
+
+        window.zoomStackDiagram2 = svgPanZoom('#svg_diagram_2_comes_here svg', {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: true,
+            center: false
+        });
+
     }
 
     $( document ).ready(function() {
