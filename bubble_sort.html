@@ -4,6 +4,8 @@
 		<title>Bubble Sort Demo :: By Khoj Badami</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="http://cdn.jsdelivr.net/vue/2.0.3/vue.js"></script>
+		<script src="./libs/sorttable.js"></script>
 		<style type="text/css">
 
 			.table {
@@ -112,14 +114,30 @@
 
 		<div class="container">
 			<div class="row" style="min-height: 600px;">
-				<div class="col-sm-4 mt-3" style="position: relative;" id="bubbles_holder">
-				</div> 
-				<div class="col-sm-8 mt-3 text-white">
+				<div class="col-sm-2 mt-3" style="position: relative;" id="bubbles_holder">
+				</div>
+				<div class="col-sm-3 mt-3" id="comparisons_table">
+					<table class="table sortable" id="c_list_table">
+						<thead class="thead-dark">
+							<tr>
+								<th>
+									Comparisons Done
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="row in tableRows">
+								<td>{{ row }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-sm-6 mt-3 text-white">
 					<div class="text-center mb-3">
 						<button class="btn btn-warning btn-lg" type="button" id="pause_button">Pause <i class="fa fa-pause"></i></button>
 						<button class="btn btn-warning btn-lg" type="button" id="play_button">Play <i class="fa fa-play-circle"></i></button>
 					</div>
-					<table class="table">
+					<table class="table" id="summary_table">
 						<thead class="thead-dark">
 							<tr>
 								<th>
@@ -222,6 +240,8 @@
 		async function runAnimation() {
 			await sleep(1000);
 
+			comparisonsTableVueComponent.tableRows = [];
+
 			for (i = currentAnimationStep; i < arrayOfAnimationSteps.length; i++) {
 				if (animationRunning == false) { break; }
 				let animationStep = arrayOfAnimationSteps[i];
@@ -231,7 +251,7 @@
 			}
 		}
 
-		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized) {
+		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription) {
 			this.pointerPostion = pointerPostion;
 			this.originalArray = originalArray;
 			this.numberOfComparisions = numberOfComparisions;
@@ -249,6 +269,8 @@
 				$(firstBubbleSelector).addClass('sorted');
 				$(secondBubbleSelector).addClass('sorted');
 
+				comparisonsTableVueComponent.tableRows.push(comparisonDescription);
+
 				setTimeout(() => { 
 					$(firstBubbleSelector).removeClass('sorted');
 					$(secondBubbleSelector).removeClass('sorted');
@@ -259,7 +281,7 @@
 			}
 		}
 
-		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions, optimized) {
+		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions, optimized, comparisonDescription) {
 			this.startingArray = startingArray;
 			this.pointerPositionToSwapAt = pointerPositionToSwapAt;
 			this.originalArray = originalArray;
@@ -286,6 +308,8 @@
 
 				this.startingArray[this.pointerPositionToSwapAt] = secondVal;
 				this.startingArray[this.pointerPositionToSwapAt + 1] = firstVal;
+
+				comparisonsTableVueComponent.tableRows.push(comparisonDescription);
 
 				// Animate
 				gsap.to(firstBubbleSelector, {
@@ -321,18 +345,19 @@
 				for (pointerPostion = 0; pointerPostion < last_index; pointerPostion++) {
 					let elementAtPointer = inputArray[pointerPostion];
 					let nextElement = inputArray[pointerPostion + 1];
+					let comparisonDescription = `${elementAtPointer} vs ${nextElement}`;
 					numberOfComparisions += 1;
 					if (elementAtPointer > nextElement) {
 						wasThereASwap = true;
 						arrayOfAnimationSteps.push(
-							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions, optimized)
+							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription)
 						);
 						inputArray[pointerPostion] = nextElement;
 						inputArray[pointerPostion + 1] = elementAtPointer;
 					}
 					else {
 						arrayOfAnimationSteps.push(
-							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized)
+							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription)
 						);
 					}
 				}
@@ -400,6 +425,13 @@
 		function markBubbleInActive(index) {
 			$(`#number_${index}`).removeClass('active');
 		}
+
+		let comparisonsTableVueComponent = new Vue({
+			el: '#comparisons_table',
+			data: {
+				tableRows: []
+			}
+		})
 
 	</script>
 	</body>
