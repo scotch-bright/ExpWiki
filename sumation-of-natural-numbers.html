@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Summation Of Natural Numbers :: By Khoj Badami</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="http://cdn.jsdelivr.net/vue/2.0.3/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src="./libs/svg-pan-zoom.js"></script>
+  <style>
+      #svg_diagram_comes_here {
+          border: 1px solid lightsteelblue;
+          min-height: 500px;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Summation Of Natural Numbers</h1>
+            <form id="input">
+                <div class="form-group">
+                    <label for="sizeOfInput">Sum of 1 + 2 + 3 + 4 + 5 + 6 .... n</label>
+                    <input type="number" class="form-control" id="n" />
+                    <small class="form-text text-muted">Enter in a number and generate the diagram below.</small>
+                </div>
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+        <div class="col-sm-6 mt-4">
+            <div id="svg_diagram_comes_here">
+            </div>
+        </div>
+        <div class="col-sm-6 mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-4 text-center">
+                    <h4 class="mb-4">The formula we are trying to appreciate the beauty of..</h4>
+                    <img src="images/summation.svg" style="width: 200px; max-width: 90%;" />
+                </div>
+                <div class="col-sm-12 mt-5">
+                    <h4 class="text-center mb-4">Things To Observe...</h4>
+                    <div id="explanation"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let draw = undefined;
+    let unitSide = 10;
+    let twoColors = ['#ff6768', '#263859'];
+    let explanation = '';
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function drawRectangleWithRandomColor(options, drawing) {
+        drawing.rect(
+            options.size * unitSide, 
+            unitSide).move(
+            options.left * unitSide, 
+            options.level * unitSide).attr(
+                { 
+                    fill: options.color,
+                    stroke: '#000',
+                    'stroke-width': 1
+                });
+                
+        drawing.text(`${options.size}`).move(
+            options.left * unitSide + 2,
+            options.level * unitSide + 6
+        ).font({
+            size: 5
+        }).attr(
+        { 
+            fill: '#fff'
+        });
+    }
+
+    function drawStack(n) {
+        $("#svg_diagram_comes_here").html('');
+
+        let numberOfStacks = Math.floor(n / 2);
+        let smallBlockSize = 1;
+        let largeBlockSize = n;
+        let explanationLines = [];
+
+        draw = SVG().addTo('#svg_diagram_comes_here').size('100%', 500);
+        for (i = 0; i < numberOfStacks; i++) {
+
+            if (i == 0 || i == 1 || i == 2) {
+                explanationLines.push(`Observe that ${smallBlockSize} + ${largeBlockSize} = ${smallBlockSize + largeBlockSize}`);
+            }
+
+            drawRectangleWithRandomColor({
+                size: smallBlockSize,
+                left: 0,
+                level: i,
+                color: i % 2 == 0 ? twoColors[0] : twoColors[1]
+            }, draw);
+            drawRectangleWithRandomColor({
+                size: largeBlockSize,
+                left: smallBlockSize,
+                level: i,
+                color: i % 2 == 0 ? twoColors[1] : twoColors[0]
+            }, draw);
+            smallBlockSize += 1;
+            largeBlockSize -= 1;
+        }
+
+        explanationLines.push(`...and so on for all the layers.`);
+
+        explanationLines.push(`As you can see above, there are ${numberOfStacks} stacks of size ${n + 1}`);
+
+        if (n % 2 != 0) {
+            let numberNotInTheStack = numberOfStacks + 1;
+            explanationLines.push(`The only number that is not in the stack is ${numberNotInTheStack}. Which can be thought of as (${n + 1} / 2).`);
+        }
+
+        explanationLines.push(`Observe that "${n + 1}" is basically (${n} + 1) = ${n + 1} a.k.a (n + 1)`);
+
+        explanationLines.push(`Observe that "${Math.floor(n / 2)}" if basically (${n} / 2) or (n / 2)`);
+
+        //explanationLines.push(`The area of the rectangle you see on the left is the sum of all numbers upto tp`);  
+
+        $("#explanation").html(
+            `<ul>
+            ${explanationLines.map(line => `<li>${line}</li>`).join('')}
+            </ul>`
+        );
+
+            
+
+        window.zoomStackDiagram = svgPanZoom('#svg_diagram_comes_here svg', {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: true,
+            center: false
+        });
+
+    }
+
+    $( document ).ready(function() {
+        $( "#input" ).submit(function( event ) {
+            event.preventDefault();
+            let n = parseInt($("#n").val());
+            drawStack(n);
+        });
+    });
+
+
+</script>
+
+</body>
+</html>
