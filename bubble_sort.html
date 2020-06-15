@@ -71,6 +71,11 @@
 			body {
 				background: #00b4ff;
 			}
+
+			#c_list_table td {
+				color: white;
+				font-weight: bold;
+			}
 		</style>
 	</head>
 	<body>
@@ -117,7 +122,7 @@
 				<div class="col-sm-2 mt-3" style="position: relative;" id="bubbles_holder">
 				</div>
 				<div class="col-sm-3 mt-3" id="comparisons_table">
-					<table class="table sortable" id="c_list_table">
+					<table class="table" id="c_list_table">
 						<thead class="thead-dark">
 							<tr>
 								<th>
@@ -127,7 +132,9 @@
 						</thead>
 						<tbody>
 							<tr v-for="row in tableRows">
-								<td>{{ row }}</td>
+								<td v-bind:style="{ backgroundColor: row.color }">
+									{{ row.desc }}
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -187,9 +194,25 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 	<script type="text/javascript">
 
+		function getRandomColor() {
+			var letters = '0123456789ABCDEF';
+			var color = '#';
+			for (var i = 0; i < 6; i++) {
+				color += letters[Math.floor(Math.random() * 16)];
+			}
+			return color;
+		}
+
 		var currentAnimationStep = 0;
 		var animationRunning = false;
 		var arrayOfAnimationSteps = [];
+		var numbersAndColors = {};
+
+		function getColorForNumber(number) {
+			if (numbersAndColors[number] != undefined) return numbersAndColors[number];
+			numbersAndColors[number] = getRandomColor();
+			return numbersAndColors[number];
+		}
 
 		function playAnimation() {
 			$("#play_button").attr('disabled', true);
@@ -251,7 +274,7 @@
 			}
 		}
 
-		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription) {
+		function NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription, comparisonColor) {
 			this.pointerPostion = pointerPostion;
 			this.originalArray = originalArray;
 			this.numberOfComparisions = numberOfComparisions;
@@ -269,7 +292,10 @@
 				$(firstBubbleSelector).addClass('sorted');
 				$(secondBubbleSelector).addClass('sorted');
 
-				comparisonsTableVueComponent.tableRows.push(comparisonDescription);
+				comparisonsTableVueComponent.tableRows.push({
+					desc: comparisonDescription,
+					color: comparisonColor
+				});
 
 				setTimeout(() => { 
 					$(firstBubbleSelector).removeClass('sorted');
@@ -281,7 +307,7 @@
 			}
 		}
 
-		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions, optimized, comparisonDescription) {
+		function SwapAnimationStep(startingArray, pointerPositionToSwapAt, originalArray, numberOfComparisions, optimized, comparisonDescription, comparisonColor) {
 			this.startingArray = startingArray;
 			this.pointerPositionToSwapAt = pointerPositionToSwapAt;
 			this.originalArray = originalArray;
@@ -309,7 +335,10 @@
 				this.startingArray[this.pointerPositionToSwapAt] = secondVal;
 				this.startingArray[this.pointerPositionToSwapAt + 1] = firstVal;
 
-				comparisonsTableVueComponent.tableRows.push(comparisonDescription);
+				comparisonsTableVueComponent.tableRows.push({
+					desc: comparisonDescription,
+					color: comparisonColor
+				});
 
 				// Animate
 				gsap.to(firstBubbleSelector, {
@@ -346,18 +375,19 @@
 					let elementAtPointer = inputArray[pointerPostion];
 					let nextElement = inputArray[pointerPostion + 1];
 					let comparisonDescription = `${elementAtPointer} vs ${nextElement}`;
+					let comparisonColor = getColorForNumber(elementAtPointer);
 					numberOfComparisions += 1;
 					if (elementAtPointer > nextElement) {
 						wasThereASwap = true;
 						arrayOfAnimationSteps.push(
-							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription)
+							new SwapAnimationStep([...inputArray], pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription, comparisonColor)
 						);
 						inputArray[pointerPostion] = nextElement;
 						inputArray[pointerPostion + 1] = elementAtPointer;
 					}
 					else {
 						arrayOfAnimationSteps.push(
-							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription)
+							new NoSwapAnimationStep(pointerPostion, originalArray, numberOfComparisions, optimized, comparisonDescription, comparisonColor)
 						);
 					}
 				}
