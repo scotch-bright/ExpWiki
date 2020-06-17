@@ -129,27 +129,14 @@
 
         explanationLines.push(`...and so on for all the layers.`);
 
-        explanationLines.push(`As you can see above, there are ${numberOfStacks} layers of size ${n + 1} each.`);
+        explanationLines.push(`As you can see above, there are ${n / 2} layers of size ${n + 1} each.`);
 
-        if (n % 2 != 0) {
-            let numberNotInTheStack = numberOfStacks + 1;
-            explanationLines.push(`The only number that does not make a complete layer is ${numberNotInTheStack}.`);
-            explanationLines.push(`Observe that all the numbers from 1 to ${n} are covered and make up the diagram.`);
-            explanationLines.push(`With this, finding the sum is just a simple multiplication + addition of the last layer.`);
-            explanationLines.push(`In this case that happens to be [${numberOfStacks} x ${n + 1}] + [${(n + 1) / 2}] = ${(numberOfStacks * (n + 1)) + ((n + 1) / 2)}.`);
-            explanationLines.push(`So, the "${numberOfStacks}" above is basically (${n} - 1) / 2 a.k.a. (n - 1) / 2`);
-            explanationLines.push(`Size of each layer is "${n + 1}" a.k.a. (n + 1)`);
-            explanationLines.push(`The last un-finished layer is of size "${(n + 1) / 2}" a.k.a. (n + 1) / 2`);
-            explanationLines.push(`Below we put all this together with a little bit of basic algebra to get the above formula.`);
-            explanationLines.push(`<img src="./images/simplification_of_odd_number_formula.png" style="max-width: 100%;" />`);
-        } else {
-            explanationLines.push(`Observe that all the numbers from 1 to ${n} are covered and make up the stack.`);
-            explanationLines.push(`With this, finding the sum is just a simple multiplication. See that,(number of layers) x (size of each layer) = sum of numbers from 1 to ${n}`);
-            explanationLines.push(`In this case that happens to be ${numberOfStacks} x ${n + 1} = ${numberOfStacks * (n + 1)}.`);
-            explanationLines.push(`Observe that "${n + 1}" is basically (${n} + 1) = ${n + 1} a.k.a (n + 1)`);
-            explanationLines.push(`Observe that "${Math.floor(n / 2)}" if basically (${n} / 2) or (n / 2)`);
-            explanationLines.push(`An that means that the above formula checks out.. (n + 1) X (n / 2) = Sum of all numbers till n`)            
-        }
+        explanationLines.push(`Observe that all the numbers from 1 to ${n} are covered and make up the stack.`);
+        explanationLines.push(`With this, finding the sum is just a simple multiplication. See that,(number of layers) x (size of each layer) = sum of numbers from 1 to ${n}`);
+        explanationLines.push(`In this case that happens to be ${n / 2} x ${n + 1} = ${(n / 2) * (n + 1)}.`);
+        explanationLines.push(`Observe that "${n + 1}" is basically (${n} + 1) = ${n + 1} a.k.a (n + 1)`);
+        explanationLines.push(`Observe that "${n / 2}" is basically (${n} / 2) or (n / 2)`);
+        explanationLines.push(`An that means that the above formula checks out.. (n + 1) X (n / 2) = Sum of all numbers till n`)
 
         $("#explanation").html(
             `<ul>
