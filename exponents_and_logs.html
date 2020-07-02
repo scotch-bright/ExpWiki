@@ -122,7 +122,9 @@
 	    	demoComponenet.cicleSize = Math.pow(demoComponenet.growthRate, currentTime);
 	    	demoComponenet.circleSizeInPx = 10 * demoComponenet.cicleSize;
 	    	if (isItAWholeNumber(currentTime)) {
-	    		demoComponenet.cicleSize = parseInt(demoComponenet.cicleSize);
+	    		if (isItAWholeNumber(demoComponenet.cicleSize)) {
+	    			demoComponenet.cicleSize = parseInt(demoComponenet.cicleSize);
+	    		}
 	    		isPaused = true;
 	    	}
 	    }
