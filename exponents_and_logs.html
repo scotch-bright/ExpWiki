@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Exponents & Logs</title>
+	<script src="https://cdn.jsdelivr.net/vue/2.0.3/vue.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		#circle {
+			border-radius: 50%;
+			background-color: red;
+		}
+
+		#circleContainer {
+			border: 1px solid grey;
+			width: 100%;
+			height: 500px;
+			overflow: hidden;
+			padding: 2%;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+
+			<div class="col-sm-12">
+				<h1>Visualizing Exponents & Logs</h1>
+			</div>
+
+			<div class="col-sm-12 mt-2">
+
+				<div class="form-group">
+				    <label for="growthRate">Growth Rate (How many "x" the size of the circle grows as a function of time. For example, if you enter in 3, the circle will be 3x its size each unit of time.)</label>
+				    <input type="number" class="form-control" id="growthRate" aria-describedby="growthRateHelp" placeholder="Enter Growth Rate" value="2">
+				    <small id="growthRateHelp" class="form-text text-muted">For every unit of time, the circle below will grow by the given growth rate.</small>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<button class="btn btn-warning btn-lg" type="button" id="pause_button">Pause <i class="fa fa-pause"></i></button>
+		<button class="btn btn-warning btn-lg" type="button" id="play_button">Play <i class="fa fa-play-circle"></i></button>
+	</div>
+	<div class="container mt-2" id="demo">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>{{ time.toFixed(2) }} units of time have passed.</h3>
+			</div>
+			<div class="col-sm-12">
+				<h3>Size Of The Circle Is: {{ cicleSize.toFixed(2) }}</h3>
+			</div>
+			<div class="col-sm-6 mt-2" id="circleContainer">
+				<div 
+					id="circle" 
+					v-bind:style="{ width: circleSizeInPx + 'px', height: circleSizeInPx + 'px'  }"
+				>
+				</div>
+			</div>
+			<div class="col-sm-6 mt-2">
+				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+				    See Conventional Math Notation
+				</button>
+
+				<div class="collapse" id="collapseExample">
+				  <div class="card card-body mt-2">
+						<h3>Conventional Mathematical Notation</h3>
+						<h1>{{growthRate}}<sup>{{time.toFixed(2)}}</sup>={{cicleSize.toFixed(2)}}</sup></h1>
+						<br />
+						<h1>log<sub>{{growthRate}}</sub>({{cicleSize.toFixed(2)}}) = {{time.toFixed(2)}}</h1>
+				  </div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+
+		let growthRate = 2;
+
+		var isPaused = true;
+
+	    let demoComponenet = new Vue({
+	      el: '#demo',
+	      data: {
+	        time: 0.0,
+	        circleSizeInPx: 10,
+	        cicleSize: 1,
+	        growthRate: growthRate
+	      }
+	    });
+
+	    setInterval(function(){
+	    	if (isPaused == false) {
+		    	updateTime();
+		    	updateCircleSize();
+	    	}
+	    }, 10);
+
+	    function updateTime() {
+	    	let currentVal = demoComponenet.time;
+	    	demoComponenet.time += 0.001;
+	    }
+
+	    function isItAWholeNumber(number) {
+	    	let integerVersion = parseInt(number);
+	    	if (number - integerVersion < 0.001) {
+	    		return true;
+	    	}
+	    	else {
+	    		return false;
+	    	}
+	    }
+
+	    function updateCircleSize() {
+	    	let currentTime = demoComponenet.time;
+	    	demoComponenet.cicleSize = Math.pow(demoComponenet.growthRate, currentTime);
+	    	demoComponenet.circleSizeInPx = 10 * demoComponenet.cicleSize;
+	    	if (isItAWholeNumber(currentTime)) {
+	    		isPaused = true;
+	    	}
+	    }
+
+		$( document ).ready(function() {
+
+			$("#pause_button").click(() => {
+				isPaused = true;
+			});
+
+			$("#play_button").click(() => {
+				isPaused = false;
+			});
+
+			$("#growthRate").change(() => {
+				demoComponenet.growthRate = parseFloat($("#growthRate").val());
+			});
+
+		});
+
+	</script>
+</body>
+</html>
