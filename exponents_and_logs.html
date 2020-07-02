@@ -64,10 +64,10 @@
 			</div>
 			<div class="col-sm-6 mt-2">
 				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-				    See Conventional Math Notation
+				    Show / Hide Conventional Math Notation
 				</button>
 
-				<div class="collapse" id="collapseExample">
+				<div class="collapse show" id="collapseExample">
 				  <div class="card card-body mt-2">
 						<h3>Conventional Mathematical Notation</h3>
 						<h1>{{growthRate}}<sup>{{time.toFixed(2)}}</sup>={{cicleSize.toFixed(2)}}</sup></h1>
@@ -122,6 +122,7 @@
 	    	demoComponenet.cicleSize = Math.pow(demoComponenet.growthRate, currentTime);
 	    	demoComponenet.circleSizeInPx = 10 * demoComponenet.cicleSize;
 	    	if (isItAWholeNumber(currentTime)) {
+	    		demoComponenet.cicleSize = parseInt(demoComponenet.cicleSize);
 	    		isPaused = true;
 	    	}
 	    }
